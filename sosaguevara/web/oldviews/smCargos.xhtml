@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_smenu.xhtml">
+
+
+            <ui:define name="content">
+                <div class="top_content">
+                    <h:panelGrid columns="2" cellpadding="5" style="width:1300px;position:relative;margin-left: auto;margin-right: auto;" >
+
+                        <h:form id="formMostrarProyecciones" style="width:600px;position:absolute;" styleClass="foo">
+                            <p:panel header="Catalogo de Cargos:" style="width:600px;" >
+
+
+                                <p:dataTable var="tablaProyecciones" value="#{proyeccionesBean.cargos}"
+                                             widgetVar="proyeccionesTable"
+                                             emptyMessage="No hay registros disponibles para la busqueda"
+                                             paginator="true" rows="10" paginatorPosition="top"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="10"
+                                             selectionMode="single" selection="#{proyeccionesBean.cargo}" rowKey="#{tablaProyecciones.cpt}"
+                                             >
+                                    <f:facet name="header">
+                                        <p:outputPanel >
+                                            <h:outputText value="Buscar Cargos:  "  />
+                                            <p:inputText id="globalFilter" onkeyup="PF('proyeccionesTable').filter()" style="width:300px" placeholder="Enter keyword"/>
+
+                                        </p:outputPanel>
+                                    </f:facet>
+
+                                    <p:ajax event="rowSelect"  listener="#{order.setCargo(proyeccionesBean.cargo)}" update=":formOrdenPaciente" />
+
+                                    <p:column headerText="Cargo" filterBy="#{tablaProyecciones.proc}" filterStyle="display:none" width="70x|%">
+                                        <h:outputText value="#{tablaProyecciones.proc}" />
+                                    </p:column>
+                                    <p:column headerText="modalidad">
+                                        <h:outputText value="#{tablaProyecciones.modality}" />
+                                    </p:column>
+
+
+                                </p:dataTable>
+                            </p:panel>
+                        </h:form>
+
+
+
+                        <h:form id="formOrdenPaciente" style="width:600px;position:absolute;" styleClass="foo">
+                            <p:panel header="ORDEN DE PACIENTE ID: #{pacienteBean.parameter.idPaciente}">
+
+
+                                <p:panelGrid  columns="4">   
+
+                                    <p:outputLabel value="Paciente:"  />
+                                    <p:outputLabel value="#{pacienteBean.parameter.namepatient}"  />
+
+                                    <p:outputLabel value="Apellido:"/>
+                                    <p:outputLabel value="#{pacienteBean.parameter.lastnamepatient}"/>
+
+
+
+                                    <p:outputLabel value="Genero:"/>
+                                    <p:outputLabel value="#{pacienteBean.parameter.gender}"/>
+
+                                    <p:outputLabel value="Edad:"/>
+                                    <p:outputLabel value="EDAD"/>
+
+
+                                    <p:outputLabel value="Medico Tratante: " />
+                                    <p:selectOneMenu id="tratante" value="#{referentesBean.referente.iduser}">
+                                        <f:selectItem itemLabel="-- Seleccione --" itemValue=""/>
+                                        <f:selectItems value="#{referentesBean.listReferentes}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Medico Referente: " />
+                                    <p:selectOneMenu id="referente" value="#{referentesBean.referente.iduser}">
+                                        <f:selectItem itemLabel="-- Seleccione --" itemValue=""/>
+                                        <f:selectItems value="#{referentesBean.listReferentes}"/>
+                                    </p:selectOneMenu>
+
+                                </p:panelGrid>
+
+                                <p:commandButton  value="Ordenar" style="width: 100px;" icon="fa fa-fw fa-send"  actionListener="#{rxinterfaceBean.setEstudio(pacienteBean.parameter, order.cargos)}"  action="#{rxinterfaceBean.doWorklist()}" oncomplete="gowklst(xhr, status, args)"/>
+                                <p:commandButton  value="Regresar" style="width: 100px;" icon="ui-icon-arrowreturnthick-1-w" action="#{order.cargos.clear()}" oncomplete="gopacientes(xhr, status, args)"/> 
+
+                                <p:dataTable var="tablaCargos" value="#{order.cargos}"  
+                                             emptyMessage="Seleccione estudios">
+
+
+                                    <p:column headerText="Cargo" width="210">
+                                        <h:outputText value="#{tablaCargos.proc}" />
+                                    </p:column>
+
+
+                                    <p:column>  
+                                        <f:facet name="header">  
+                                            <h:outputText value="Operation" />  
+                                        </f:facet>  
+                                        <h:commandButton action="#{order.deleteAction(tablaCargos)}"
+                                                         value="Borrar"></h:commandButton>
+                                        <br/>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:panel>
+                        </h:form>
+
+                    </h:panelGrid>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

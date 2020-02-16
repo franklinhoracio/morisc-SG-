@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Aseguradoras" table="aseguradoras" schema="public" optimistic-lock="version">
+        <id name="idaseguradora" type="int">
+            <column name="idaseguradora" />
+            <generator class="assigned" />
+        </id>
+        <property name="aseguradora" type="string">
+            <column name="aseguradora" length="150" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="10" />
+        </property>
+        <property name="direccion" type="string">
+            <column name="direccion" length="400" />
+        </property>
+        <set name="rxinterfaces" table="rxinterface" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="aseguradora" />
+            </key>
+            <one-to-many class="model.Rxinterface" />
+        </set>
+    </class>
+</hibernate-mapping>

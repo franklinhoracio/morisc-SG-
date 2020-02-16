@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <p:growl id="growl"  showDetail="true" life="3000" />
+                <h:form id="dashboard"  title="Reporte Diario:"  >
+                    <p:panel   id="reportes"  header="Dashboard:"  style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                        <p:toolbar style="background-color:  #ffffff; ">
+                            <f:facet name="left">
+                                <p:outputLabel value="Fecha: " style="color: black"/>
+                                <p:calendar    id="fechaworklist" maxdate="#{newDashboardBean.today}" value="#{newDashboardBean.workdate}" widgetVar="fechaworklist"  navigator="true" pattern="yyyy-MM-dd" style="margin-left: 1px;">
+                                    <p:ajax event="dateSelect" update="graficos fechafinal" listener="#{newDashboardBean.createDonutModels()}" />
+                                </p:calendar>
+                                <p:calendar maxdate="#{newDashboardBean.today}" mindate="#{newDashboardBean.workdate}"  id="fechafinal" value="#{newDashboardBean.endDate}" widgetVar="fechafinal"  navigator="true" pattern="yyyy-MM-dd" mask="true">
+                                    <p:ajax event="dateSelect" update="graficos fechaworklist" listener="#{newDashboardBean.createRangeDonutModels()}" />
+
+                                </p:calendar>
+
+                            </f:facet>
+                        </p:toolbar>
+
+
+                        <p:panel   id="graficos" >
+
+                            <div id="clock">
+                                <p> <span id="weeks">#{newDashboardBean.estudiosDia(newDashboardBean.workdate, newDashboardBean.endDate)}</span> Estudios </p>
+                                <div class="space"> </div>
+
+                                <p> <span id="daysLeft">#{newDashboardBean.pacientesDia(newDashboardBean.workdate, newDashboardBean.endDate)}</span> Pacientes </p>
+                                <div class="space"> </div>
+
+                                <p> <span id="hours" class="total">#{newDashboardBean.estudiosTotal()}</span> Estudios(Totales) </p>
+                                <div class="space"> </div>
+
+                                <p> <span id="minutes" class="total">#{newDashboardBean.pacientesTotal()}</span> Pacientes(Totales) </p>
+                                <div class="space"> </div>
+
+                                <p> <span id="seconds" class="total">#{newDashboardBean.referentesTotal()}</span> Referentes </p>
+                            </div>
+
+                            <p:separator />
+
+
+                            <div id="graficas"  class="ui-g" style="margin-top: 20px;">
+                                <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                    <p:chart id="chart1" type="donut" model="#{newDashboardBean.donutModel1}" style="width:360px;height:300px"  />
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                    <p:chart id="chart2" type="donut" model="#{newDashboardBean.donutModel2}" style="width:360px;height:300px"  />
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                    <p:chart id="chart3" type="donut" model="#{newDashboardBean.donutModel3}" style="width:360px;height:300px"  />
+                                </div>
+                            </div>
+                        </p:panel>
+                    </p:panel>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

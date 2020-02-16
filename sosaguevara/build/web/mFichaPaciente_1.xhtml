@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                <h:form id="formMostrarFichaPaciente"   >
+
+                    <p:panel   id="expediente" header="Ficha del Paciente:" style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+
+                        <div >
+
+                            <h3 style="margin-top:0;max-width: 1100px;margin-left: auto;margin-right: auto">
+                                <h:outputLabel value="Paciente: " style="font-weight: bold;vertical-align: top;"  />
+                                <p:selectOneMenu id="smPacientes" value="#{fichaPacienteBean.idpaciente}" filter="true" filterMatchMode="contains" required="true" style="width: 60%;">
+                                    <f:selectItem itemLabel="----Seleccione Paciente-----" itemValue=" "/>
+                                    <f:selectItems value="#{fichaPacienteBean.listaPacientes}"/>
+                                    <p:ajax update="formMostrarFichaPaciente" event="change" listener="#{fichaPacienteBean.estudiosPaciente()}"/>
+                                </p:selectOneMenu>     
+
+                            </h3>
+
+
+                            <p:fieldset legend="Información del Paciente" toggleable="true" collapsed="false" toggleSpeed="500" style="margin-left: auto;margin-right: auto;max-width: 1110px">
+
+
+                                <p:panelGrid columns="4" style="width: 100%" >
+
+                                    <p:outputLabel value="DUI:"  style="font-weight: bold;width: 50px;"/>
+                                    <p:outputLabel value="#{fichaPacienteBean.paciente.extid}"  styleClass="outputLabel"/> 
+                                    <p:outputLabel value="Pasaporte:"  style="font-weight: bold;width: 50px;"/>
+                                    <p:outputLabel value="#{fichaPacienteBean.paciente.passport}" styleClass="outputLabel"/> 
+                                    <p:outputLabel value="Nombre del Paciente:"  style="font-weight: bold;width: 50px;"/>
+                                    <p:outputLabel value="#{fichaPacienteBean.paciente.namepatient}" styleClass="outputLabel"  />    
+                                    <p:outputLabel value="Apellido del Paciente:"  style="font-weight: bold;width: 50px;"/>
+                                    <p:outputLabel value="#{fichaPacienteBean.paciente.lastnamepatient}" styleClass="outputLabel"  />  
+                                    <p:outputLabel value="Genero:"  style="font-weight: bold;width: 50px;"/>
+                                    <p:outputLabel value="#{fichaPacienteBean.paciente.gender}" />
+
+                                    <p:outputLabel value="F. de Nacimiento: "  style="font-weight: bold;width: 50px;"/>
+
+                                    <p:outputLabel id="panelEdad" value="#{fichaPacienteBean.paciente.datebirth}"/>
+                                    <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                    <p:outputLabel value="#{fichaPacienteBean.paciente.phone}" styleClass="outputLabel" />
+                                    <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                    <p:outputLabel value="#{fichaPacienteBean.paciente.email}" styleClass="outputLabel" />
+                                    <p:row>
+                                     <p:outputLabel value="Direccion del Cliente:"   style="font-weight: bold;width: 50px;"/>
+                                    <p:outputLabel  value="#{fichaPacienteBean.paciente.adress}" styleClass="outputLabel" style="height: 200px"/>   
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:fieldset>
+
+
+
+                            <p:separator/>
+
+                            <p:dataTable id="tablaestpac" var="tablaestpac" value="#{fichaPacienteBean.estudios}"
+                                         widgetVar="estpacTable"
+                                         rowIndexVar="fila"
+                                         paginator="true" 
+                                         rows="10" 
+                                         reflow="true"
+
+                                         paginatorPosition="top"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="10,20,50"
+                                         currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                         emptyMessage="No hay registros disponibles para la busqueda"
+                                         selectionMode="single" selection="#{fichaPacienteBean.estudio}" 
+                                         rowKey="#{tablaestpac.accnumber}"
+                                         sortBy="#{tablaestpac.datestudy}" sortOrder="descending"
+                                         style="max-width: 1100px;margin-left: auto;margin-right: auto;"
+                                         >
+
+
+                                <p:ajax event="rowSelect" listener="#{fichaPacienteBean.setEstudio(fichaPacienteBean.estudio)}" update="formMostrarFichaPaciente"  />
+
+
+                                <p:column headerText="#" width="2%">
+                                    <h:outputText value="#{fila+1}" >
+
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="AccNum" width="8%" filterBy="#{tablaestpac.accnumber}" filterStyle="display:none" filterMatchMode="contains" >
+                                    <h:outputText value="1.#{tablaestpac.accnumber}.18" />
+                                </p:column>
+                                <p:column headerText="Estudio"  width="26%">
+                                    <h:outputText value="#{tablaestpac.proyecciones.proc}" />
+                                </p:column>
+                                <p:column headerText="Radiologo" width="24%" filterBy="#{tablaestpac.usuarios.firstnameuser} #{tablaestpac.usuarios.lastnameuser}" filterStyle="display:none" filterMatchMode="contains" >
+                                    <h:outputText value="#{tablaestpac.usuarios.firstnameuser} #{tablaestpac.usuarios.lastnameuser}" />
+                                </p:column>
+                                <p:column headerText="Referente" width="28%" filterBy="#{tablaestpac.medicos.nombremedico} #{tablaestpac.medicos.apellidomedico}" filterStyle="display:none" filterMatchMode="contains" >
+                                    <h:outputText value="#{tablaestpac.medicos.nombremedico} #{tablaestpac.medicos.apellidomedico}" />
+                                </p:column>
+                                <p:column headerText="Fecha/Hora" width="12%">
+                                    <h:outputText value="#{tablaestpac.datestudy}" >
+                                        <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                                    </h:outputText>     
+                                </p:column>
+
+
+
+                            </p:dataTable>
+                            <p:separator/>
+                            <p:fieldset legend="Informe" toggleable="true" collapsed="false" toggleSpeed="500" style="margin-left: auto;margin-right: auto;max-width: 1110px">
+
+                                <h:panelGrid id="reporte" cellpadding="10">
+
+                                    <h:outputText id="reporteFicha" styleClass="radReportText" value="#{fichaPacienteBean.estudio.report}"  escape="false"  /> 
+
+                                </h:panelGrid>
+
+
+                            </p:fieldset>
+
+                        </div>
+
+
+                    </p:panel>     
+
+                </h:form>
+
+
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

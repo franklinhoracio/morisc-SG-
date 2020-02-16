@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./t_menu.xhtml">
+            <ui:define name="content">
+                <div >
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formRegistrarEstudio">
+                        <p:panel id="panel" header="Registrar Estudio" style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:panel style="margin-bottom:10px;">
+                                <h:panelGrid columns="3" cellpadding="5">
+                                    <h:panelGrid id="datosPaciente" columns="2" columnClasses="label, value"  style="width: 360px;margin-left: auto; margin-right: auto;margin-top: 0" styleClass="foo">
+                                        <h:outputLabel   value="Paciente: " style="font-weight: bolder;font-style: inherit;margin-top: 0" />
+                                        <h:outputLabel   value=" " style="font-weight: bold" />
+                                        <h:outputLabel   value=" " style="font-weight: bold" />
+                                        <h:outputLabel   value=" " style="font-weight: bold" />
+                                        <p:outputLabel value="DUI:"  style="font-weight: bold;width: 50px;"/>
+                                        <h:panelGrid >
+                                            <p:row>
+                                                <p:column>
+                                                    <p:inputMask  value="#{rxinterfaceBean.pacienteBean.paciente.extid}" class="input" mask="99999999-9" size="12" autocomplete="off" onkeypress="if(event.keyCode==13){return false;}">
+                                                        <p:ajax update="datosPaciente" event="change" listener="#{rxinterfaceBean.filtrarPacienteDui(rxinterfaceBean.pacienteBean.paciente.extid)}" />
+                                                    </p:inputMask>  
+                                                </p:column> 
+                                                <p:column>
+                                                    <p:commandButton id="btnBcr" icon="bcrIcon" styleClass="bcrButton" actionListener="#{rxinterfaceBean.inicializarBcr(actionevent)}" update="formRegistrarDui" oncomplete="PF('dlgregistrardui').show()" immediate="true">
+                                                    </p:commandButton>
+                                                    <p:tooltip id="tltbcr" for="btnBcr" value="Codigo de Dui" />
+                                                </p:column>
+                                            </p:row>
+                                        </h:panelGrid>
+                                        <p:outputLabel value="Pasaporte:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:inputText value="#{rxinterfaceBean.pacienteBean.paciente.passport}" styleClass="outputLabel" size="12" autocomplete="off" onkeypress="if(event.keyCode==13){return false;}">
+                                            <p:ajax update="datosPaciente" event="change" listener="#{rxinterfaceBean.filtrarPacientePass(rxinterfaceBean.pacienteBean.paciente.passport)}" />
+                                        </p:inputText> 
+                                        <p:outputLabel value="Nombre *:"  style="font-weight: bold;width: 50px;" />
+                                        <p:inputText autocomplete="off"  value="#{rxinterfaceBean.pacienteBean.paciente.namepatient}" styleClass="outputLabel" required="true" requiredMessage="Nombre de paciente es requerido!" size="35" onkeypress="if(event.keyCode==13){return false;}"/>    
+                                        <p:outputLabel value="Apellido *:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:inputText autocomplete="off"  value="#{rxinterfaceBean.pacienteBean.paciente.lastnamepatient}" styleClass="outputLabel" required="true" requiredMessage="Apellido de paciente es requerido!" size="35" onkeypress="if(event.keyCode==13){return false;}"/>  
+                                        <p:outputLabel value="Genero:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:selectOneMenu value="#{rxinterfaceBean.pacienteBean.paciente.gender}" >
+                                            <f:selectItem itemLabel="M" itemValue="M"/>
+                                            <f:selectItem itemLabel="F" itemValue="F"/>
+                                            <f:selectItem itemLabel="O" itemValue="O"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Edad *:"  style="font-weight: bold;width: 100px;"/>
+                                        <h:panelGrid id="panelEdad">
+                                            <p:row>
+                                                <p:column colspan="2">
+                                                    <p:selectOneButton id="dobButton" value="#{rxinterfaceBean.pacienteBean.option}" style="margin-left: auto;margin-right: auto;position: relative">
+                                                        <f:selectItem itemLabel="Fecha" itemValue="Fecha"   />
+                                                        <f:selectItem itemLabel="Edad" itemValue="Edad" />
+                                                        <p:ajax update="dob years" event="change" listener="#{rxinterfaceBean.pacienteBean.cambioDob()}" />
+                                                    </p:selectOneButton>
+                                                    <p:outputLabel value=" " /> 
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column>
+                                                    <p:calendar id="dob"  value="#{rxinterfaceBean.pacienteBean.paciente.datebirth}" disabled="#{!rxinterfaceBean.pacienteBean.switchdob}" navigator="true" maxdate="#{rxinterfaceBean.pacienteBean.today}" autocomplete="off" pattern="dd-MM-yyyy" mask="true" yearRange="c-100:c+0"  style="width: 30px" required="true" requiredMessage="Fecha de nacimiento es requerida!"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <p:spinner id="years" value="#{rxinterfaceBean.pacienteBean.edad}" min="0"   disabled="#{rxinterfaceBean.pacienteBean.switchdob}" styleClass="outputLabel"  class="spinner"  required="true" requiredMessage="Debe seleccionar una edad!"/>    
+                                                </p:column>
+                                            </p:row>
+                                        </h:panelGrid>
+                                        <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                        <p:inputMask autocomplete="off"  value="#{rxinterfaceBean.pacienteBean.paciente.phone}" styleClass="outputLabel" mask="9999-9999" size="12" onkeypress="if(event.keyCode==13){return false;}"/>
+                                        <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:inputText autocomplete="off"  value="#{rxinterfaceBean.pacienteBean.paciente.email}" styleClass="outputLabel" type="email" size="35" onkeypress="if(event.keyCode==13){return false;}"/>
+
+                                        <p:outputLabel value="Direccion:"  style="font-weight: bold;width: 500px;" />
+                                        <p:inputTextarea  value="#{rxinterfaceBean.pacienteBean.paciente.adress}" styleClass="outputLabel" cols="35" onkeypress="if(event.keyCode==13){return false;}"/>
+
+                                        <p:separator/>
+                                        <p:separator/>
+
+                                        <h:outputLabel value="Referente: " style="font-weight: bold;margin-top: 0"  />
+                                        <p:selectOneMenu id="smRefentes" value="#{rxinterfaceBean.rxinterface.medicos.idmedico}" filter="true" filterMatchMode="contains" required="true" style="width: 270px;">
+                                            <f:selectItems value="#{rxinterfaceBean.listaReferentes}"/>
+                                            <p:ajax update="smRefentes inReferentesN inReferentesA" event="change" listener="#{rxinterfaceBean.filtrarReferente(rxinterfaceBean.rxinterface.medicos.idmedico)}"/>
+                                        </p:selectOneMenu> 
+                                        <p:outputLabel value="Nombre"  style="font-weight: bold;width: 500px;" />
+                                        <p:inputText autocomplete="off"  id="inReferentesN" value="#{rxinterfaceBean.rxinterface.medicos.nombremedico}" styleClass="outputLabel" onkeypress="if(event.keyCode==13){return false;}"/>
+                                        <p:outputLabel value="Apellido"  style="font-weight: bold;width: 500px;" />
+                                        <p:inputText autocomplete="off"  id="inReferentesA" value="#{rxinterfaceBean.rxinterface.medicos.apellidomedico}" onkeypress="if(event.keyCode==13){return false;}"></p:inputText>
+
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="1" cellpadding="0">
+
+                                        <h:outputLabel value="Institución: " style="font-weight: bold"  />
+                                        <p:inputText autocomplete="off" value="#{rxinterfaceBean.rxinterface.institucion}" onkeypress="if(event.keyCode==13){return false;}"/> 
+
+                                        <p:separator/>
+                                        <h:outputLabel value="Aseguradora: " style="font-weight: bold"  />
+                                        <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.aseguradoras.idaseguradora}" filter="true" filterMatchMode="contains"  style="width: 300px;">
+                                            <f:selectItems value="#{rxinterfaceBean.listaAseguradoras}"/>
+                                        </p:selectOneMenu> 
+                                        <p:separator/>
+                                        <h:outputLabel value="Tipo de Pago: " style="font-weight: bold"  />
+                                        <p:selectOneButton id="tpagoButton" value="#{rxinterfaceBean.rxinterface.tipopago}" style="margin-left: auto;margin-right: auto;position: relative">
+                                            <f:selectItem itemLabel="Contado" itemValue="contado" />
+                                            <f:selectItem itemLabel="Credito" itemValue="credito" />
+                                            <f:selectItem itemLabel="Mixto" itemValue="mixto" />
+                                        </p:selectOneButton>
+                                        <p:separator/>
+                                        <h:outputLabel value="Estudio: " style="font-weight: bold"  />
+                                        <p:selectManyMenu  value="#{rxinterfaceBean.listaProyeccionesSel}" required="true" requiredMessage="Seleccione Estudios!"  filter="true" filterMatchMode="contains" showCheckbox="true" style="width: 300px;"  >
+
+                                            <f:selectItems  value="#{rxinterfaceBean.listaProyecciones}"  var="proyecciones"  itemValue="#{proyecciones.value}" itemLabel="#{proyecciones.label}"/>
+                                            <p:ajax event="click" process="@this" update="@none"/>
+                                        </p:selectManyMenu>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:panel>
+                            <h:panelGrid columns="3">
+                                <p:defaultCommand target="@this" />
+                                <p:commandButton id="btnaceptar" update="formRegistrarEstudio growl" value="ACEPTAR"  actionListener="#{rxinterfaceBean.verificarPacientes()}" onclick="jQuery(this).attr('disabled', 'disabled')" oncomplete="jQuery(this).removeAttr('disabled')" />
+                                <p:commandButton  value="CANCELAR" ajax="false" action="mWorklist.xhmtl?faces-redirect=true" immediate="true" actionListener="#{rxinterfaceBean.disableBtn()}"/>
+                            </h:panelGrid>
+                        </p:panel> 
+                    </h:form>
+                    <h:form id="formRegistrarDui">
+                        <p:dialog id="dlgregistrardui" widgetVar="dlgregistrardui" header="Lectura de Codigo de DUI" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panel  style="max-width: 400px; margin: auto" >
+                                <div class="conteiner" >
+                                    <h:panelGrid  id="grid" columns="1" cellpadding="5">
+                                        <h:graphicImage value="/images/bcr2.png"  />
+                                        <p:inputText id="codigodui" value="#{rxinterfaceBean.bcrDui}"  required="true" label="Codigo" autocomplete="off" style="height: 0px;color: white;width: 340px;margin-left: auto;margin-right: auto">
+                                            <p:ajax update="formRegistrarEstudio" event="change" listener="#{rxinterfaceBean.scanDui()}" />
+                                        </p:inputText>
+                                    </h:panelGrid>
+                                </div>
+                            </p:panel> 
+                        </p:dialog>
+                    </h:form>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

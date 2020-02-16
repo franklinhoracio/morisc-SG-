@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Paciente" table="paciente" schema="public" optimistic-lock="version">
+        <id name="idPaciente" type="string">
+            <column name="id_paciente" length="30" />
+            <generator class="assigned" />
+        </id>
+        <property name="namepatient" type="string">
+            <column name="namepatient" length="100" not-null="true" />
+        </property>
+        <property name="lastnamepatient" type="string">
+            <column name="lastnamepatient" length="100" not-null="true" />
+        </property>
+        <property name="gender" type="string">
+            <column name="gender" length="2" not-null="true" />
+        </property>
+        <property name="datebirth" type="date">
+            <column name="datebirth" length="13" not-null="true" />
+        </property>
+        <property name="adress" type="string">
+            <column name="adress" length="500" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="10" />
+        </property>
+        <property name="extid" type="string">
+            <column name="extid" length="15" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="100" />
+        </property>
+        <property name="dateadmission" type="timestamp">
+            <column name="dateadmission" length="29" />
+        </property>
+        <property name="activo" type="java.lang.Boolean">
+            <column name="activo" />
+        </property>
+        <property name="passport" type="string">
+            <column name="passport" length="15" />
+        </property>
+        <property name="adt08" type="java.lang.Boolean">
+            <column name="adt08" />
+        </property>
+        <property name="adt14" type="java.lang.Boolean">
+            <column name="adt14" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <set name="rxinterfaces" table="rxinterface" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idpatient" length="30" not-null="true" />
+            </key>
+            <one-to-many class="model.Rxinterface" />
+        </set>
+    </class>
+</hibernate-mapping>

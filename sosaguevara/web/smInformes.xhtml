@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_smenu.xhtml">
+
+            <ui:define name="content">
+                <div>
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="3000" />
+                    <h:form id="formNuevoInforme" style="width:600px;position:absolute;" styleClass="foo">
+
+                        <p:outputLabel value="Estudio: #{rxinterfaceBean.rxinterface.accnumber}" />
+                        <p:separator/>
+                        <p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" />
+ 
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

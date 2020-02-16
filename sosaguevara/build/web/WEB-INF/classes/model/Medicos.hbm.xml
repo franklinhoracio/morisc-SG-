@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Medicos" table="medicos" schema="public" optimistic-lock="version">
+        <id name="idmedico" type="long">
+            <column name="idmedico" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="usuarios" class="model.Usuarios" fetch="select">
+            <column name="iduser" />
+        </many-to-one>
+        <property name="nombremedico" type="string">
+            <column name="nombremedico" length="100" not-null="true" />
+        </property>
+        <property name="apellidomedico" type="string">
+            <column name="apellidomedico" length="100" not-null="true" />
+        </property>
+        <property name="juntavigilancia" type="string">
+            <column name="juntavigilancia" length="20" />
+        </property>
+        <property name="especialidad" type="string">
+            <column name="especialidad" length="100" />
+        </property>
+        <property name="clinica" type="string">
+            <column name="clinica" length="100" />
+        </property>
+        <property name="direccionclinica" type="string">
+            <column name="direccionclinica" length="300" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="10" />
+        </property>
+        <property name="celular" type="string">
+            <column name="celular" length="10" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="100" />
+        </property>
+        <property name="activo" type="java.lang.Boolean">
+            <column name="activo" />
+        </property>
+        <property name="fecharegistro" type="timestamp">
+            <column name="fecharegistro" length="29" />
+        </property>
+        <property name="tipo" type="string">
+            <column name="tipo" length="20" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <property name="estudioagendado" type="java.lang.Integer">
+            <column name="estudioagendado" />
+        </property>
+        <property name="estudiocancelado" type="java.lang.Integer">
+            <column name="estudiocancelado" />
+        </property>
+        <set name="rxinterfaces" table="rxinterface" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idreference" />
+            </key>
+            <one-to-many class="model.Rxinterface" />
+        </set>
+    </class>
+</hibernate-mapping>

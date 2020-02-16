@@ -1,0 +1,146 @@
+
+#top {
+    
+    background-color:  #ffffff;
+    color: highlight;
+    padding: 0px;
+    margin: 0px;
+    width: 1310px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+#bottom {
+    text-align: center;
+    position: relative;
+    background-color: #c2dfef;
+    padding: 5px;
+    margin: 10px 0px 0px 0px;
+    width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#left {
+    float: left;
+    background-color: #ece3a5;
+    padding: 5px;
+    width: 150px;
+}
+
+.footer {
+  display: block;  
+  height: 10px;
+  text-align: center;
+  color: #AFAFAF;
+}
+
+
+#right {
+    float: right;
+    background-color: #ece3a5;
+    padding: 5px;
+    width: 150px;
+}
+
+.center_content {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+}
+
+.left_content {
+    text-align:left;
+    position: relative;
+    height: 27px;
+
+}
+
+.right_content {
+    background-color: #dddddd;
+    padding: 5px;
+    margin: 0px 170px 0px 890px;
+}
+
+#top a:link, #top a:visited {
+    color: black;
+    font-weight : bold;
+    text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+    color: black;
+    font-weight : bold;
+    text-decoration : underline;
+}
+
+.left_content_new {
+    text-align: right;
+    padding: 5px;
+    align-items: flex-end;
+}
+.top_content {
+    margin-top: 10px;
+
+}
+
+.pacientenew{
+    width: 710px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0%;
+    font-size: 90%;
+
+}
+
+.foo td {
+    vertical-align: top;
+}
+
+.colorPanel .ui-panel-titlebar {
+    color: #000000;
+}
+
+.spinner .ui-spinner-input{
+    width: 20px;
+}
+
+.inp .ui-inputfield .ui-inputtextarea{
+    width: 500px !important;
+}
+
+.status{
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-spacing: 0px 0px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    color: white;
+    font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    line-height: 16px;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    opacity: 1;
+    padding-bottom: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 0px;
+    transition-delay: 0s;
+    transition-duration: 0.7s;
+    transition-property: opacity;
+    transition-timing-function: ease-in-out;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.filtroNombre .ui-inputfield .ui-inputtext .ui-column-filter .ui-widget .ui-state-default .ui-corner-all{
+    width: 200px;
+}
+
+

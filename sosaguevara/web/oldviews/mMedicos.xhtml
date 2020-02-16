@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+
+                <h:form id="formReferentes">
+
+                    <p:dataTable var="tablaReferentes" value="#{medicosBean.medicos}"
+                                 widgetVar="referentesTable"
+                                 emptyMessage="No hay registros disponibles para la busqueda"
+                                 paginator="true" 
+                                 rows="10" 
+                                 paginatorPosition="top"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,20"
+                                 currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                 selectionMode="single" selection="#{medicosBean.medico}" 
+                                 rowKey="#{tablaReferentes.idmedico}"
+                                 >
+                        <f:facet name="header">
+                            <p:outputPanel  class="center_content">
+                                <h:outputText value="Buscar: "  />
+
+
+                                <p:inputText id="globalFilter" onkeyup="PF('referentesTable').filter()" style="width:150px" placeholder="ID, nombre o junta"/>
+                                <p:commandButton   icon="fa fa-plus" oncomplete="gomedico(xhr, status, args)" style="margin-left: 1040px;"/>
+                            </p:outputPanel>
+
+            
+        </f:facet>
+
+                        <p:column headerText="ID Referente" filterBy="#{tablaReferentes.idmedico}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                            <h:outputText value="#{tablaReferentes.idmedico}" />
+                        </p:column>
+                        <p:column headerText="Medico" filterBy="#{tablaReferentes.nombremedico}  #{tablaReferentes.apellidomedico}" filterStyle="display:none" width="30%">
+                            <h:outputText value="#{tablaReferentes.nombremedico}  #{tablaReferentes.apellidomedico}" />
+                        </p:column>
+                        <p:column headerText="Junta Vigilancia" filterBy="#{tablaReferentes.juntavigilancia}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                            <h:outputText value="#{tablaReferentes.juntavigilancia}" />
+                        </p:column>
+                        <p:column headerText="e-mail" width="20%">
+                            <h:outputText value="#{tablaReferentes.email}" />
+                        </p:column>
+
+
+
+                        <p:column headerText="Acciones"  width="10%"  >
+                            <p:commandButton  icon="ui-icon-pencil"  oncomplete="PF('dlgeditar').show()" update=":formReferentes" >
+
+                            </p:commandButton>
+                            <p:commandButton  icon="ui-icon-clipboard"  oncomplete="gocargo(xhr, status, args)" >
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>     
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

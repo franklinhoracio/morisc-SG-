@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <p:growl id="growl"  showDetail="true" life="3000" />
+                <h:form id="reportes"  title="Reporte Diario:">
+                    <p:scrollPanel style="width: 1300px; height: 330px; margin-left: auto;margin-right: auto">
+                        <p:outputLabel value="Fecha: "  />
+                        <p:calendar  label="Fecha:" id="fechareportes" widgetVar="fechareportselect" value="#{datesBean.fechaactual}" navigator="true" pattern="dd-MMM-yyyy">
+
+                        </p:calendar>
+                        <p:commandButton   icon="fa fa-chevron-right"   oncomplete="goinformes(xhr, status, args)" />
+
+
+                <p:separator />
+
+
+        <f:facet name="{Exporters}">
+            <div >
+                <h:commandLink>
+                    <p:graphicImage name="images/pdf.png" width="24"/>
+                    <p:dataExporter type="xls" target="tbl2" fileName="cars" options="#" />
+                </h:commandLink>
+ 
+                <h:commandLink>
+                    <p:graphicImage name="/images/pdf.png" width="24"/>
+                    <p:dataExporter type="pdf" target="tbl2" fileName="cars" options="#" />
+                </h:commandLink>
+            </div>
+        </f:facet>
+                    <p:chart type="pie" model="#{chartViewPie.pieModel2}" style="width:400px;height:300px;margin-left: auto;margin-right: auto;" />
+                
+                <p:separator />
+                    <p:chart type="bar" model="#{chartViewModality.barModel}" style="height:300px"/>
+                <p:separator />
+                    <p:chart type="bar" model="#{chartViewStudies.barModel}" style="height:300px"/>
+                <p:separator />
+                                
+
+                </p:scrollPanel></h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

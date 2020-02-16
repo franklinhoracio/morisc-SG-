@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Plantillas" table="plantillas" schema="public" optimistic-lock="version">
+        <id name="idplantilla" type="int">
+            <column name="idplantilla" />
+            <generator class="assigned" />
+        </id>
+        <property name="plantilla" type="string">
+            <column name="plantilla" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="nombre" length="100" />
+        </property>
+        <property name="fecha" type="date">
+            <column name="fecha" length="13" />
+        </property>
+        <property name="activo" type="java.lang.Boolean">
+            <column name="activo" />
+        </property>
+        <property name="modalidad" type="string">
+            <column name="modalidad" length="3" />
+        </property>
+        <property name="iduser" type="java.lang.Long">
+            <column name="iduser" />
+        </property>
+    </class>
+</hibernate-mapping>

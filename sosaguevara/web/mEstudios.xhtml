@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <div>
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formMostrarEstudios"   >
+                        <p:panel   id="estudiostotales" header="Busqueda de Estudios: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:dataTable id="tablaEstudiosTot" var="tablaEstudiosTot" value="#{todosEstudiosBean.listasEstudios}"
+                                         widgetVar="tablaEstudiosTot"
+                                         rowIndexVar="fila"
+                                         reflow="true"
+                                         emptyMessage="No hay registros disponibles para la busqueda"
+                                         selectionMode="single" selection="#{todosEstudiosBean.estudios}" 
+                                         rowKey="#{tablaEstudiosTot.accnumber}"
+                                         sortBy="#{tablaEstudiosTot.accnumber}" sortOrder="ascending"
+                                         >
+
+                                <f:facet name="header"   >
+                                    <p:outputPanel   >
+
+                                        <p:outputLabel value="Fecha: "  style="margin-left: 0px"/>
+                                        <p:calendar maxdate="#{todosEstudiosBean.today}"  id="fechaworklist" value="#{todosEstudiosBean.initDate}"  widgetVar="fechaworklist"  navigator="true" pattern="dd-MM-yyyy" mask="true">
+                                            <p:ajax event="dateSelect" update="fechafinal"/>
+                                        </p:calendar>
+
+                                        <p:calendar maxdate="#{todosEstudiosBean.today}" mindate="#{todosEstudiosBean.initDate}"  id="fechafinal" value="#{todosEstudiosBean.endDate}" widgetVar="fechafinal"  navigator="true" pattern="dd-MM-yyyy" mask="true">
+
+                                        </p:calendar>
+
+                                        <p:commandButton update="tablaEstudiosTot" value="Buscar" class="btnNuevoEstudio" actionListener="#{todosEstudiosBean.buscarEstudios(todosEstudiosBean.initDate, todosEstudiosBean.endDate)}" icon="fa fa-start"  ajax="true" />
+                                    </p:outputPanel>
+                                </f:facet>
+                                
+                                 <p:column headerText="#" width="2%" >
+                                    <h:outputText value="#{fila+1}" style="font-size: 11px;vertical-align: middle;text-align: center;">
+
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column  headerText="AccNum"  width="6%" style="font-size: 8">
+                                    <h:outputText value="#{tablaEstudiosTot.site}.#{tablaEstudiosTot.accnumber}.#{tablaEstudiosTot.year}" style="font-size: 12px;text-align: center; vertical-align: middle;"/>
+                                </p:column>
+
+                                <p:column class="filtroNombre" headerText="Nombre" width="25%" filterBy="#{tablaEstudiosTot.paciente.lastnamepatient} #{tablaEstudiosTot.paciente.namepatient}" filterStyle="width: 95%;" filterMatchMode="contains">
+                                    <h:outputText value="#{tablaEstudiosTot.paciente.lastnamepatient}, #{tablaEstudiosTot.paciente.namepatient}" />
+                                </p:column>
+
+                                <p:column headerText="Edad" width="4%" filterBy="#{rxinterfaceBean.edad(tablaEstudiosTot.paciente.datebirth)}" filterStyle="width: 95%;" filterMatchMode="contains">
+                                    <h:outputText value="#{rxinterfaceBean.edad(tablaEstudiosTot.paciente.datebirth)}" style="text-align: center; vertical-align: middle;font-size: 12px"/>
+                                </p:column>
+
+                                <p:column headerText="Sexo" width="3%" filterBy="#{tablaEstudiosTot.paciente.gender}" filterStyle="width: 95%;" filterMatchMode="contains">
+                                    <h:outputText value="#{tablaEstudiosTot.paciente.gender}" style="text-align: center; vertical-align: middle;font-size: 12px"/>
+                                </p:column>
+
+                                <p:column headerText="Estudio" width="15%" filterBy="#{tablaEstudiosTot.proyecciones.proc}" filterStyle="width: 95%;" filterMatchMode="contains">
+                                    <h:outputText value="#{tablaEstudiosTot.proyecciones.proc}"/>
+                                </p:column>
+
+                                <p:column  width="7%" filterBy="#{tablaEstudiosTot.proyecciones.modality}" filterMatchMode="exact" filterStyle="width: 95%;" headerText="Modalidad">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tablaEstudiosTot').filter()">
+                                            <f:selectItem itemLabel="  " itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItem itemLabel="CR" itemValue="CR" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="CT" itemValue="CT" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="MG" itemValue="MG" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="MR" itemValue="MR" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="US" itemValue="US" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="RF" itemValue="RF" noSelectionOption="false" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+
+                                    <h:outputText value="#{tablaEstudiosTot.proyecciones.modality}" style="margin: auto !important;"/>
+                                </p:column>
+
+
+                                <p:column headerText="Referente" width="25%" filterBy="##{tablaEstudiosTot.medicos.apellidomedico}, #{tablaEstudiosTot.medicos.nombremedico}" filterStyle="width: 95%;" filterMatchMode="contains" >
+                                    <h:outputText value="#{tablaEstudiosTot.medicos.apellidomedico}, #{tablaEstudiosTot.medicos.nombremedico}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Estatus" width="6%" filterBy="#{tablaEstudiosTot.status}" filterMatchMode="exact" filterStyle="padding: 0"   >
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('tablaEstudiosTot').filter()" style="width: 70%" >
+                                            <f:selectItem itemLabel="  " itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItem itemLabel="agendado" itemValue="agendado" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="completado" itemValue="completado" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="edicion" itemValue="edicion" noSelectionOption="false" />
+                                            <f:selectItem itemLabel="cancelado" itemValue="cancelado" noSelectionOption="false" />
+
+                                        </p:selectOneMenu>
+                                    </f:facet>
+
+
+                                    <h:outputText value="#{tablaEstudiosTot.status}" class="status" style="background-color: #{rxinterfaceBean.colorworklist(tablaWorklist.status)};text-align: center; vertical-align: middle;" />
+                                </p:column>  
+
+
+                                <p:column headerText="Fecha / Hora" width="13%">
+                                    <h:outputText value="#{tablaEstudiosTot.date} #{tablaEstudiosTot.timestudy}"  style="font-size: 12px">
+                                        <f:convertDateTime pattern="HH:mm" />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column exportable="false" width="3%" >
+
+                                    <h:commandLink  actionListener="#{todosEstudiosBean.imprimirReporte()}" target="_blank">
+                                        <p:commandButton id="impresionBtn" ajax="false" icon="fa fa-print"  >
+                                            <f:setPropertyActionListener value="#{tablaEstudiosTot}" target="#{tablaEstudiosTot.accnumber}" />
+                                        </p:commandButton>
+                                        <p:tooltip id="tltimpresionBtn" for="impresionBtn" value="Impresion de Informe" />
+                                    </h:commandLink>
+
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                        <p:graphicImage value="/images/excel.png" width="18"/>
+                                        <p:dataExporter type="xls" target="tablaWorklist" fileName="worklist" />
+                                    </h:commandLink>
+                                    <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                                </f:facet>
+
+                            </p:dataTable>
+
+                        </p:panel> 
+                    </h:form> 
+
+
+
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

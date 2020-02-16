@@ -1,0 +1,293 @@
+body {
+    background-color: #ffffff;
+    font-size: 12px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+    margin: 10px;
+}
+
+h1 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 1px solid #AFAFAF; 
+    font-size:  16px;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    color: #D20005;
+}
+
+a:link, a:visited {
+    color: #045491;
+    font-weight : bold;
+    text-decoration: none;
+}
+
+a:link:hover, a:visited:hover  {
+    color: #045491;
+    font-weight : bold;
+    text-decoration : underline;
+}
+
+div#clock {
+    color: white;
+    margin: 20px auto;
+    width: 1200px;
+    overflow: hidden;
+    text-align: center;
+}
+div#clock p {
+    background: #333;
+    float: left;
+    height: 150px;
+    width: 200px;
+}
+
+div#clock p span {
+    display: block;
+    font-size: 80px;
+    font-weight: bold;
+    padding: 5px 0 0;
+    margin-top: 10px;
+
+}
+
+div#clock p span.total {
+    display: block;
+    font-size: 50px;
+    font-weight: bold;
+    padding: 5px 0 0;
+    margin-top: 30px;
+}
+div#clock div.space {
+    color: #ccc;
+    display: block;
+    line-height: 1.7em;
+    font-size: 50px;
+    float: left;
+    height: 88px;
+    width: 30px;
+}
+
+.panelListas{
+    margin-left:auto;
+    margin-right:auto;
+    max-width: 1290px;
+    background-color:white;
+    min-height:700px !important;
+    margin-bottom:20px
+}
+
+
+.showHide { visibility: visible;display: none }
+.showWith { margin-left: 140px; }
+.showImage { visibility: hidden; height: 0px;padding: 0px;display: none}
+.btnNuevoEstudio{float: right}
+.showVisible { visibility: hidden;display: none}
+.fixedElement {    position:relative;}
+
+@media screen and (max-width: 1240px) {
+    div#clock{
+        display: table-cell; vertical-align: middle;margin-left: 270px !important;margin-right: auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .showHide  { visibility:hidden;height: 0px;padding: 0px; }
+    .showWith { margin-left: 0px; }
+    .showImage { visibility: visible; height: 80px;border-radius: 15px;display: inline }    
+    .showVisible { 
+        background-color: #ffffff !important;
+        color: #001c59 !important;
+        border: #ffffff !important;
+        visibility: visible; 
+        border-radius:0px 0px 0px 0px;
+        margin-top: 20px !important;
+        background-image: none !important;
+        display: inline;
+        float: right;
+    }
+    .fixedElement {
+        position:fixed;
+        top:0;
+        width:100%;
+        z-index:100;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .showHide  { display: block; }
+}
+
+@media screen and (max-width: 600px) {
+    .btnNuevoEstudio{visibility: hidden;float: none}
+}
+
+.ui-panel .ui-panel-titlebar {
+    padding: 0;
+    height: 22px;
+    text-align: left;
+}
+
+.ui-panel-title{
+    height: 22px;
+    margin-left: 0px;
+    text-align: left;
+}
+
+.ui-outputpanel{
+    padding: 0;
+    height: 24px;
+    text-align: left;
+}
+
+.ui-column-filter .ui-inputfield .ui-inputtext .ui-widget .ui-state-default .ui-corner-all{
+    height: 2px !important;
+}
+
+.ui-menuitem-link .ui-corner-all {
+    background-color: #ffffff !important;
+}
+
+ui-picklist-button-add {
+    width: 10px !important;
+}
+
+body {
+    background: #f0f0f0;
+}
+.sidemenu {
+    height: 100%;
+    overflow:hidden;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0px;
+    color: #fff;
+    width: 0px;
+    left: 0;
+    top: 90px;
+    bottom: 0;
+    z-index: 999;
+    transition: all 0.3s ;
+}
+body.sidemenu-open {
+    padding-right: 300px;
+}
+.sidemenu.is-visible {
+    left: 0;
+    min-width: 400px;
+    width: 100%;
+    padding: 10px;
+}
+
+.top_column{
+    vertical-align: top !important;
+}
+.ten-percent {
+    width: 15%;
+}
+.forty-percent {
+    width: 35%;
+}
+
+.twenty-percent {
+    width: 25%;
+    vertical-align: top;
+}
+
+.sixty-percent {
+    width: 50%;
+    vertical-align: top;
+}
+
+.radReportText {
+    display: block;
+    width: 100%; /* Optional, depends otherwise on parent. */
+    height: 300px;
+    overflow: scroll;
+}
+
+
+.barcodeicon .ui-icon {
+    width: 33px !important;
+    height: 28px !important;
+    left: 5%;
+    top: 20%;
+    margin-left:0px;
+
+    font-size: 35px !important;
+
+}
+
+.bcrButton .bcrIcon {
+    background: url(images/barcode25.png);
+    width: 25px !important;
+    height: 25px !important;
+    left: 5%;
+    top: 30%;
+    margin-left:0px;
+    /*font-size: 35px !important;*/
+}
+
+.bcrButton {
+    width: 30px;
+    height: 30px;
+}
+
+.ui-picklist-button-add-all{
+    visibility: hidden;
+}
+
+.ui-widget-content.ui-picklist-list.ui-picklist-target.ui-corner-all.ui-sortable{
+    min-height: 500px;
+    width: 380px;
+}
+.ui-widget-content.ui-picklist-list.ui-picklist-source.ui-corner-all.ui-sortable{
+    min-height: 500px;
+    width: 380px;
+}
+
+.menusmodsource .ui-widget-content.ui-picklist-list.ui-picklist-target.ui-corner-all.ui-sortable{
+    min-height: 300px;
+    width: 380px;
+}
+.menusmodtarget .ui-widget-content.ui-picklist-list.ui-picklist-source.ui-corner-all.ui-sortable{
+    min-height: 300px;
+    width: 380px;
+}
+
+.ui-selectonemenu-filter-container {
+    max-width: 600px;
+    width: 70%;
+} 
+
+.ui-selectonemenu-filter.ui-inputfield.ui-inputtext.ui-widget.ui-state-default.ui-corner-all{
+
+    width: 95%;
+} 
+
+.sosa .fc-bg {
+    background-color: red;
+    opacity: 0.8;
+}
+.fernando .fc-bg {
+    background-color: blue;
+    opacity: 0.8;
+}
+.beatriz .fc-bg {
+    background-color: blueviolet;
+    opacity: 0.8;
+}
+.montalvo .fc-bg {
+    background-color: green;
+    opacity: 0.8;
+}
+.alfaro .fc-bg {
+    background-color: #f88080;
+    opacity: 0.8;
+}
+
+.disabled .fc-bg {
+    background-color: #EBEBE4;
+    opacity: 0.8;
+}
+

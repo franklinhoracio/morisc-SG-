@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+                    <p:growl id="growl"  showDetail="true" life="10000" />
+                    <h:form id="formLectura" rendered="#{loginBean.roleActivo('admin')}"  >
+
+                        <p:panel   id="lectura" header="#{rxinterfaceBean.rxinterface.accnumber} #{rxinterfaceBean.rxinterface.proyecciones.proc}" style="margin-left: auto; margin-right: auto; width: 1300px; background-color:  white">
+
+                            <p:separator/>
+                            <h:panelGrid columns="4" width="500px" style="margin-left: 300px;">
+
+
+                                <p:outputLabel value="Paciente:" style="font-weight: bolder"/>
+                                <p:outputLabel value="#{rxinterfaceBean.rxinterface.paciente.lastnamepatient}, #{rxinterfaceBean.rxinterface.paciente.namepatient}" />
+
+                                <p:outputLabel value=" " />
+                                <p:outputLabel value=" " />
+
+
+
+                                <p:outputLabel value="Referente:" style="font-weight: bolder"/>
+                                <p:outputLabel value="#{rxinterfaceBean.rxinterface.medicos.apellidomedico}, #{rxinterfaceBean.rxinterface.medicos.nombremedico}" />
+
+                                <p:outputLabel value=" " />
+                                <p:outputLabel value=" " />
+
+                                <p:outputLabel value="Fecha:" style="font-weight: bolder"/>
+                                <p:outputLabel value="#{rxinterfaceBean.rxinterface.date}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+
+                                <p:outputLabel value="  " />
+                                <p:outputLabel value=" " />
+
+                                <p:outputLabel value="Hora:" style="font-weight: bolder"/>
+                                <h:outputText value="#{rxinterfaceBean.rxinterface.timestudy}">
+                                    
+                                </h:outputText>
+
+                                <p:outputLabel value="  " />
+                                <p:outputLabel value=" " />
+
+                                <p:outputLabel value="Radiologo: " style="font-weight: bolder"/>
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.usuarios.iduser}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                    <f:selectItem itemLabel="#{loginBean.namedico()}" itemValue="#{loginBean.idusuario()}" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaRadiologos}"/>
+                                </p:selectOneMenu> 
+
+
+                            </h:panelGrid>
+                            <p:separator/>
+                            <p:commandButton style="margin-left: 300px;" update="growl" value="GUARDAR" actionListener="#{rxinterfaceBean.registrarInforme()}"/>
+                            <p:commandButton  value="REGRESAR" action="mInformes"/>
+                            <p:outputLabel value="Imprimir: " style="font-weight: bolder;margin-left: 248px"  />
+                            <h:commandLink value="Formato 1"  style="padding: .3em 1em;" actionListener="#{rxinterfaceBean.verReporteMembrete()}" target="_blank" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-text ui-c"/>
+                            <p:commandLink value="Formato 2"  style="padding: .3em 1em;" actionListener="#{rxinterfaceBean.verReporte()}" target="_blank" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-text ui-c" ajax="false" />
+                            <p:separator/>
+
+
+
+                            <p:editor style="margin-bottom:10px;width: 650px;margin-left: auto;margin-right: auto" height="300" id="editor" value="#{rxinterfaceBean.rxinterface.report}"  widgetVar="editorWidget"   width="650"  controls="bold italic underline strikethrough subscript superscript | font size style | color highlight removeformat | bullets numbering | outdent indent | alignleft center alignright justify | undo redo | rule "/>
+                        </p:panel>     
+                    </h:form> 
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

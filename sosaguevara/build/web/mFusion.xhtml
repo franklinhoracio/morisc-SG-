@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                <h:form id="formFusion"   >
+
+                    <p:panel   id="fusion" header="Fusión de Datos de Pacientes: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+
+                        <p:panelGrid columns="2" layout="grid">            
+                            <h:outputLabel value="Seleccione el paciente con los datos correctos: " style="font-weight: bold;margin-top: 0"  />
+                            <p:selectOneMenu disabled="false" id="paciente" value="#{rxfusionBean.rxfusion.idmasterpatient}" filter="true" filterMatchMode="contains" required="true" style="width: 500px;">
+                                <f:selectItems value="#{rxfusionBean.listaPacientes}"/>
+                            </p:selectOneMenu> 
+                            <h:outputLabel value="Seleccione paciente a fusionar: " style="font-weight: bold;margin-top: 0;"  />
+                            <p:selectOneMenu  disabled="false" id="pacientefusion" value="#{rxfusionBean.rxfusion.idmrg}" filter="true" filterMatchMode="contains" required="true" style="width: 500px;">
+                                <f:selectItems value="#{rxfusionBean.listaPacientes}"/>
+                            </p:selectOneMenu> 
+                        </p:panelGrid>
+
+                        <p:commandButton update="formConfirmar" disabled="false" value="Fusionar" actionListener="#{rxfusionBean.setPatients()}" oncomplete="PF('dlgconfirmar').show()" ></p:commandButton>
+
+                    </p:panel>     
+
+                </h:form>
+
+                <h:form id="formConfirmar">
+                    <p:dialog id="dlgconfirmar" widgetVar="dlgconfirmar" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                        <h:panelGrid columns="1" columnClasses="label, value"  style="width: 600px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                            <h:outputLabel value="ADVERTENCIA!"  style="font-weight: bold;width: 50px;font-size: larger"/>
+                            <br/>
+                            <h:outputLabel value="Esta seguro que desea fusionar el paciente:"  style="font-weight: bold;margin-top: 0;" />
+                            <h:outputLabel value="#{rxfusionBean.masterpatient.idPaciente} #{rxfusionBean.masterpatient.namepatient} #{rxfusionBean.masterpatient.lastnamepatient}"  style="margin-top: 0;" />
+                            <br/>
+                            <h:outputLabel value="Con el paciente: " style="font-weight: bold;margin-top: 0;"  />
+                            <h:outputLabel value="#{rxfusionBean.mergepatient.idPaciente} #{rxfusionBean.mergepatient.namepatient} #{rxfusionBean.mergepatient.lastnamepatient}"  style="margin-top: 0;" />
+                            <br/>
+                            <h:outputLabel value="Estos cambios no podran ser revertidos!"  style="font-weight: bold;width: 50px;font-size: larger;color: #D20005"/>
+                            <br/>
+                            
+                        </h:panelGrid>
+                        <p:commandButton value="SI" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" oncomplete="PF('dlgconfirmar').hide()" actionListener="#{rxfusionBean.registrarFusionPaciente()}"  update="formFusion growl"/>
+                        <p:commandButton value="No" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('dlgconfirmar').hide()" immediate="true"/>
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

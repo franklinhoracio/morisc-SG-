@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repor2" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5339e1fa-fc81-4530-9267-428e65b7569b">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="access" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT idpatient,
+idphysician,
+idreference,
+report,
+datestudy,
+date,
+r.cpt,
+namepatient || ' ' ||lastnamepatient as nombrepaciente,
+proc,
+nombremedico || ' ' || apellidomedico as referente,
+firstnameuser || ' ' || lastnameuser as radiologo,
+EXTRACT(YEAR FROM age(cast(p.datebirth as date)))|| 'A ' || EXTRACT(MONTH FROM age(cast(p.datebirth as date))) || 'M ' || EXTRACT(DAY FROM age(cast(p.datebirth as date))) || 'D ' as edad
+FROM rxinterface r
+inner join paciente p ON r.idpatient = p.id_paciente
+inner join medicos m ON r.idreference = m.idmedico
+inner join proyecciones e ON r.cpt = e.cpt
+inner join usuarios u ON r.idphysician = u.iduser
+where r.accnumber = $P{access}]]>
+	</queryString>
+	<field name="idpatient" class="java.lang.String"/>
+	<field name="idphysician" class="java.lang.Long"/>
+	<field name="idreference" class="java.lang.Long"/>
+	<field name="report" class="java.lang.String"/>
+	<field name="datestudy" class="java.sql.Timestamp"/>
+	<field name="date" class="java.sql.Date"/>
+	<field name="cpt" class="java.lang.Long"/>
+	<field name="nombrepaciente" class="java.lang.String"/>
+	<field name="proc" class="java.lang.String"/>
+	<field name="referente" class="java.lang.String"/>
+	<field name="radiologo" class="java.lang.String"/>
+	<field name="edad" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<pageHeader>
+		<band height="190">
+			<staticText>
+				<reportElement x="1" y="105" width="77" height="20" uuid="e55f6b5e-95d4-46db-9316-b56b6f3d4524"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Paciente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="145" width="77" height="20" uuid="2c8ee7a5-0c3b-4598-b40f-8e3cdfbec237"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Estudio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="125" width="77" height="20" uuid="1701c298-f206-4a5b-8779-4b3ce5f5ee66"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Referente:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="86" y="105" width="334" height="20" uuid="fbcc62f6-e91a-4509-aa53-7b5e5ae50707"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombrepaciente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="145" width="334" height="20" uuid="d0693a1c-aa24-4186-b102-2e5194945ba9"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{proc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="125" width="334" height="20" uuid="94610f73-473a-4515-9734-541f8e7821ad"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="86" y="166" width="334" height="20" uuid="1cb033c1-1269-432e-a899-a291a4db89bd"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="165" width="77" height="20" uuid="ed65caec-0cbb-4f18-ba67-cf237a656809"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="106" width="33" height="20" uuid="68bf0c81-9b6d-494c-9519-143772ddb5f1"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[ID:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="126" width="33" height="20" uuid="e701aef2-695b-4aac-a6cf-e010748ba9f8"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Edad:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="454" y="106" width="113" height="20" uuid="64433299-f0ca-43db-8165-8d2868d2b31b"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idpatient}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="-23" y="186" width="617" height="1" forecolor="#003366" uuid="48df4117-b59d-42b7-801f-d31de71a7c81"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement mode="Transparent" x="-23" y="101" width="617" height="1" forecolor="#003366" uuid="7305be89-4ad3-4fc0-bca2-77167d4f26da"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="454" y="155" width="113" height="20" uuid="3cf970e5-f63f-4796-8f6c-e580a927d563"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{edad}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="28" y="14" width="75" height="75" uuid="3d19137e-0bc7-41c3-b96c-10512c02c074"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="92" y="23" width="480" height="28" forecolor="#003366" uuid="8069b1b7-a5b7-4983-924a-8407781c5ab6"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLÍNICA DE RADIOLOGÍA Y ULTRASONOGRAFÍA ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="91" y="51" width="480" height="28" forecolor="#003366" uuid="eedf14c0-75d6-497f-9c95-129023f56113"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SOSA-GUEVARA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="130">
+			<staticText>
+				<reportElement positionType="Float" x="210" y="107" width="165" height="17" uuid="ea13e56d-02a6-4326-b652-268a2c6e8a40"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Medico Radiólogo]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="35" y="0" width="512" height="20" uuid="c8e04c3a-8fa3-4e08-881a-51858979593f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom" markup="html">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{report}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="202" y="88" width="184" height="1" uuid="a9083c03-2635-4260-b781-1d86fbc38299"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="143" y="89" width="287" height="18" uuid="e0460301-814e-48ff-a7fa-5845615c426d"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{radiologo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="63">
+			<textField evaluationTime="Report">
+				<reportElement x="533" y="44" width="40" height="17" forecolor="#999999" uuid="8653ff11-8dd9-42c9-81d2-666b15d598c2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="453" y="44" width="80" height="17" forecolor="#999999" uuid="b359ddad-d8c6-470b-92e5-46062995c43a"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement mode="Transparent" x="-23" y="25" width="617" height="1" forecolor="#003366" uuid="966f9fdd-e77b-412c-a209-2fbabc152bbf"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="78" y="29" width="429" height="32" forecolor="#999999" uuid="13b61882-ca35-4595-956f-9d8ff1a32831"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Clínica de Radiología y Ultrasonografía Sosa - Guevara
+Clínicas Medicas, San Salvador Tel.: (503) 2225-7846 , (503) 2226-0307]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

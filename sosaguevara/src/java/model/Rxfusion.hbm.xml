@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Rxfusion" table="rxfusion" schema="public" optimistic-lock="version">
+        <id name="idfusion" type="int">
+            <column name="idfusion" />
+            <generator class="assigned" />
+        </id>
+        <property name="idmasterpatient" type="string">
+            <column name="idmasterpatient" length="50" />
+        </property>
+        <property name="idmrg" type="string">
+            <column name="idmrg" length="50" />
+        </property>
+        <property name="accfusion" type="string">
+            <column name="accfusion" length="50" />
+        </property>
+        <property name="fechaestudioant" type="date">
+            <column name="fechaestudioant" length="13" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="fecha" length="35" />
+        </property>
+    </class>
+</hibernate-mapping>

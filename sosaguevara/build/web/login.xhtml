@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+        <link href="./resources/css/cssLayout.css" rel="stylesheet" type="text/css"/> 
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css"/> 
+        <title>moRisC</title>
+        <link rel="shortcut icon" type="image/x-icon"  href="images/favicon/favicon.ico" />
+    </h:head>
+    <h:body style="background-color: #ffffff;background: #ffffff">
+
+        <div id="top" style="max-width: 1300px;min-width: 200px;width: auto;">
+            <h:graphicImage value="/images/logoI.jpg"  class="showImage" />
+            <h:graphicImage value="/images/banner3.jpg" width="100%" usemap="#mapname" class="showHide" style="padding: 0px;top: 0px;border-radius:5px 5px 0px 0px;" >
+                <map name="mapname">
+                    <area shape="rect" coords="50, 0, 220, 120" href="mWorklist.xhtml" alt="alttext" />
+                </map>
+            </h:graphicImage>
+
+
+            <h:form id="menuTab" style="background-color: #ffffff;background: #ffffff">  
+                <p:menubar  style="border-radius:0px;outline-width: 0px;" class="showHide" >
+                    <p:menuitem value="Worklist"  url="mWorklist.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem> 
+                    <p:menuitem value="Informes" url="mInformes.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem> 
+                    <p:menuitem value="Finalizados" url="mFinalizados.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem> 
+                    <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem> 
+                    <p:menuitem value="Citas" url="mCitas.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem> 
+                    <p:menuitem value="Herramientas" url="mPacientes.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem> 
+
+                    <p:menuitem value="Mantenimientos" url="mMedicos.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem> 
+                    <p:menuitem value="Reportes" url="mDashboard.xhtml" style="color:black;background-color:white" disabled="true"></p:menuitem>
+                </p:menubar>
+            </h:form>
+            <h:graphicImage class="showHide" value="/images/barra2.png" width="100%" style="border-radius:0px 0px 5px 5px;" />
+        </div>
+
+        <div >
+
+            <h:form id="loginForm">
+                <p:panel   id="login" header="Login: " style="margin-left: auto; margin-right: auto;max-width: 1300px; background-color:  white; min-height: 700px;text-align: left">
+
+
+                    <p:growl id="msg"  showDetail="true" life="3000" />
+                    <br></br><br></br><br></br><br></br><br></br><br></br>
+                    <p:panel  style="max-width: 300px; margin: auto" >
+                        <div class="conteiner" >
+                            <h:panelGrid  id="grid" columns="2" cellpadding="5">
+                                <h:outputLabel for="username" value="Usuario: " />
+                                <p:inputText value="#{loginBean.uname}" id="username" required="true" label="username"  requiredMessage="Ingresar Usuario es requerido!" />
+
+                                <h:outputLabel for="password" value="Clave: " />
+                                <p:password value="#{loginBean.password}" id="password" required="true" label="password" requiredMessage="Ingresar Contraseña es requerido!"/>
+
+                                <f:facet name="footer">
+                                    <p:commandButton id="loginButton" value="Login" update=":growl grid" icon="fa fa-fw fa-user"
+                                                     action="#{loginBean.loginProject}" ajax="false"
+                                                     oncomplete="handleLoginRequest(xhr, status, args)"/>
+                                </f:facet>
+                            </h:panelGrid>
+                        </div>
+                    </p:panel> 
+                </p:panel>
+                
+                 
+            </h:form>     
+            <div class="footer">
+                <br/>
+                Clínica de Radiología y Ultrasonografía Sosa - Guevara
+                <br/>
+                Clínicas Medicas, San Salvador Tel.: (503) 2225-7846 , (503) 2226-0307
+            </div> 
+        </div>
+
+
+
+    </h:body>
+</html>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_smenu.xhtml">
+
+            <ui:define name="content">
+                <p:growl id="growl"  showDetail="true" life="3000" />
+                
+                <h:form id="formInsertar" class="pacientenew" title="Nuevo Paciente:">
+                    <p:panel header="Ingresar Datos del Medico:" >
+                     <p:panelGrid id="grid" columns="4" >   
+                         
+                <p:outputLabel value="Nombre del Paciente *"  />
+                <p:inputText id="firstname" value="#{pacienteBean.paciente.namepatient}" required="true" requiredMessage="Nombre de Paciente es obligatorio"/>              
+                
+                
+                <p:outputLabel value="Apellido del Paciente *"/>
+                <p:inputText value="#{pacienteBean.paciente.lastnamepatient}" required="true" requiredMessage="Apellido de Paciente es obligatorio"/>
+
+                <p:outputLabel value="Genero *"/>
+                <p:selectOneMenu  value="#{pacienteBean.paciente.gender}" style="width:125px" required="true" requiredMessage="Genero de Paciente es obligatorio">
+                    <f:selectItem itemLabel="" itemValue="" />
+                    <f:selectItem itemLabel="M" itemValue="M" />
+                    <f:selectItem itemLabel="F" itemValue="F" />
+                    <f:selectItem itemLabel="O" itemValue="O" />
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Fecha de Nacimiento"/>
+                <p:calendar id="dob" value="#{pacienteBean.paciente.datebirth}" showOn="button" navigator="true" pattern="dd-MMM-yyyy" yearRange="-100:+0" required="true" requiredMessage="Fecha de Nacimiento es obligatorio"/>
+
+                <p:outputLabel value="e-mail" />
+                <p:inputText value="#{pacienteBean.paciente.email}" />
+
+                <p:outputLabel value="Telefono"/>
+                <p:inputText value="#{pacienteBean.paciente.phone}"/>
+
+                <p:outputLabel value="ID Nacional (DUI)"/>
+                <p:inputMask value="#{pacienteBean.paciente.extid}" mask="99999999-9"/>
+
+                <p:outputLabel value="Direccion"/>
+                <p:inputText value="#{pacienteBean.paciente.adress}"/>
+
+                <p:outputLabel value="Pasaporte"/>
+                <p:inputText value="#{pacienteBean.paciente.passport}"/>                   
+
+            </p:panelGrid>
+            <p:commandButton actionListener="#{pacienteBean.insertar()}" value="Nuevo Medico" oncomplete="handlePacienteRequest(xhr, status, args)" icon="ui-icon-disk" update=":growl grid"/>
+            <p:commandButton  value="Regresar" icon="ui-icon-arrowreturnthick-1-w" oncomplete="gomedicos(xhr, status, args)"/>
+        </p:panel>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+
+            <ui:define name="content">
+                <div >
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formRegistrarEstudio">
+
+                        <p:panel id="panel" header="Registrar Estudio" style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:panel style="margin-bottom:10px;">
+
+                                <h:panelGrid columns="2" cellpadding="5" columnClasses="top_column, top_column">
+                                    <h:panelGrid id="datosPaciente" columns="2" columnClasses="label, value"  style="width: 360px;margin-left: auto; margin-right: auto;margin-top: 0; " styleClass="foo">
+
+                                        <h:outputLabel   value="Paciente: " style="font-weight: bold" />
+                                        <p:selectOneMenu  value="#{rxinterfaceBean.rxinterface.paciente.idPaciente}" disabled="true" style="width: 300px;">
+                                            <f:selectItem itemLabel="#{rxinterfaceBean.rxinterface.paciente.lastnamepatient}, #{rxinterfaceBean.rxinterface.paciente.namepatient}" itemValue="#{rxinterfaceBean.rxinterface.paciente.idPaciente}" />
+                                        </p:selectOneMenu>
+
+                                        <h:outputLabel value="Referente: " style="font-weight: bold"  />
+                                        <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.medicos.idmedico}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                            <f:selectItems value="#{rxinterfaceBean.listaReferentes}"/>
+                                        </p:selectOneMenu> 
+
+                                        <h:outputLabel value="Institución: " style="font-weight: bold"  />
+                                        <p:inputText value="#{rxinterfaceBean.rxinterface.institucion}" />
+
+                                        <h:outputLabel value="Aseguradora: " style="font-weight: bold"  />
+                                        <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.aseguradoras.idaseguradora}" filter="true" filterMatchMode="contains"  style="width: 300px;">
+                                            <f:selectItems value="#{rxinterfaceBean.listaAseguradoras}"/>
+                                        </p:selectOneMenu> 
+
+                                        <h:outputLabel value="Tipo de Pago: " style="font-weight: bold"  />
+                                        <p:selectOneButton id="tpagoButton" value="#{rxinterfaceBean.rxinterface.tipopago}" style="margin-left: auto;margin-right: auto;position: relative">
+                                            <f:selectItem itemLabel="Contado" itemValue="contado" />
+                                            <f:selectItem itemLabel="Credito" itemValue="credito" />
+                                            <f:selectItem itemLabel="Mixto" itemValue="mixto" />
+                                        </p:selectOneButton>
+                                    </h:panelGrid>
+
+                                    <h:panelGrid >
+                                        <h:outputLabel value="Estudio: " style="font-weight: bold"  />
+                                      
+                                        <p:pickList id="pickList" value="#{rxinterfaceBean.estudiosPickList}" var="entityConverter" itemLabel="#{entityConverter.modality} - #{entityConverter.proc}" itemValue="#{entityConverter}" 
+                                                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" showCheckbox="false" responsive="true"
+                                                    converter="entityConverter" required="true" class="menusmodsource menusmodtarget"
+                                                    >
+
+                                        </p:pickList>
+
+
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:panel>
+
+                            <h:panelGrid columns="2">
+
+                                <p:commandButton id="btnaceptar" value="ACEPTAR" oncomplete="PF('dlgregistrar').show()" actionListener="#{rxinterfaceBean.nuevosEstudiosMod()}" update="formRegistrarEstudios" />
+                                <p:commandButton  value="CANCELAR" ajax="false" action="mWorklist.xhmtl?faces-redirect=true"  immediate="true"/>
+                            </h:panelGrid>
+
+                        </p:panel>  
+                        <br/>
+                    </h:form>
+
+                    <h:form id="formRegistrarEstudios">
+                        <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Lista de Estudios a Realizar: " showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200" >    
+
+                            <p:panel style="width: 600px" >
+
+                                <br/>
+
+                                <p:dataTable id="tablaWorklist" var="tablaWorklist" value="#{rxinterfaceBean.rxestudios}"
+                                             widgetVar="worklistTable" emptyMessage="Seleccione estudios a registrar!">
+
+                                    <p:column headerText="Estudio"  width="85%">
+
+                                        <p:selectOneMenu value="#{tablaWorklist.proyecciones.cpt}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                            <f:selectItem itemLabel="--- Seleccione ---" />
+                                            <f:selectItems value="#{rxinterfaceBean.listaProyecciones}"/>
+                                        </p:selectOneMenu> 
+
+                                    </p:column>
+
+                                    <p:column headerText="Cantidad" width="15%">
+                                        <p:spinner value="#{tablaWorklist.cantidad}" min="1" required="true" class="spinner"/>  
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+
+                                <p:commandButton  value="CONFIRMAR" ajax="false" action="mWorklist.xhmtl?faces-redirect=true" actionListener="#{rxinterfaceBean.nuevosEstudios3()}" />
+                                <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true" actionListener="#{rxinterfaceBean.disableBtn()}"/>   
+                            </p:panel>
+                        </p:dialog>
+                    </h:form>
+
+
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

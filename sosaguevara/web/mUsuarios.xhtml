@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./t_menu.xhtml">
+            <ui:define name="content">
+                <div>
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="3000" />
+                    <h:form id="formMostrarUsuarios" >
+
+                        <p:panel  toggleTitle="Lista de Usuarios"  id="listausuarios" header="Usuarios: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:dataTable id="tablaUsuarios" var="tablaUsuarios" value="#{usuariosBean.usuarios}"
+                                         widgetVar="usuariosTable"
+                                         emptyMessage="No hay registros disponibles para la busqueda"
+                                         paginator="true" 
+                                         rows="15" 
+                                         reflow="true"
+                                         paginatorPosition="top"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="15,25,50"
+                                         currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                         selectionMode="multiple"  
+                                         rowKey="#{tablaUsuarios.iduser}"
+                                         sortBy="#{tablaUsuarios.inputdate}" sortOrder="descending" 
+                                         style="max-width: 800px;margin-left:auto;margin-right:auto;"
+                                         >
+
+                                <f:facet name="header"  >
+                                    <p:outputPanel class="left_content"  >
+                                        <h:outputText value="Buscar "  />
+                                        <p:inputText id="globalFilter" onkeyup="PF('usuariosTable').filter()"  placeholder="ID/Nombre/Apellido"/>
+                                        <p:commandButton id="newUserBtn"  class="btnNuevoEstudio"  value="Nuevo Usuario" icon="fa fa-floppy-o" oncomplete="PF('dlgregistrar').show()" actionListener="#{usuariosBean.inicializarUsuario(actionevent)}" update=":formRegistrarUsuario"/>
+                                        <p:tooltip id="tltnewUserBtn" for="newUserBtn" showEvent="Nuevo Usuario" hideEvent="blur" />    
+                                    </p:outputPanel>
+                                </f:facet>
+
+
+                                <p:column headerText="Usuario" sortBy="dateadmission" filterBy="#{tablaUsuarios.nameuser}" filterStyle="display:none" filterMatchMode="contains" width="13%">
+                                    <h:outputText value="#{tablaUsuarios.nameuser}" style="font-size:11px;font-weight: bold"/>
+                                </p:column>
+                                <p:column headerText="Nombre" filterBy="#{tablaUsuarios.lastnameuser} #{tablaUsuarios.firstnameuser}" filterStyle="display:none" filterMatchMode="contains" width="40%">
+                                    <h:outputText value="#{tablaUsuarios.lastnameuser}, #{tablaUsuarios.firstnameuser}" style="font-size:11px;"/>
+                                </p:column>
+                                <p:column headerText="Rol"  width="10%">
+                                    <h:outputText value="#{tablaUsuarios.rol}" style="font-size:11px;" />
+                                </p:column>
+                                <p:column headerText="Radiologo"  width="10%">
+                                    <p:selectBooleanCheckbox  value="#{tablaUsuarios.radiologo}" style="font-size:11px;" disabled="true"/>
+                                </p:column>
+                                <p:column headerText="E-mail"  width="30%">
+                                    <h:outputText value="#{tablaUsuarios.emailuser}" style="font-size:11px;"/>
+                                </p:column>
+                                <p:column headerText="Telefono" width="10%">
+                                    <h:outputText value="#{tablaUsuarios.phone}" style="font-size:11px;"/>
+                                </p:column>                        
+
+                                <p:column width="14%" exportable="false">
+                                    <p:commandButton id="editarUserBtn"  icon="ui-icon-pencil" update="formModificarUsuarios" oncomplete="PF('dlgmodificar').show()" >
+                                        <f:setPropertyActionListener value="#{tablaUsuarios}" target="#{usuariosBean.usuario}" />
+                                    </p:commandButton>
+                                    <p:tooltip id="tlteditarUserBtn" for="editarUserBtn" value="Editar Usuario" />
+                                    <p:commandButton id="rstPswdBtn"  icon="ui-icon-key" update="formPasswordUsuario" oncomplete="PF('dlgpassword').show()">
+                                        <f:setPropertyActionListener value="#{tablaUsuarios}" target="#{usuariosBean.usuario}" />
+                                    </p:commandButton>
+                                    <p:tooltip id="tltrstPswdBtn" for="rstPswdBtn"  value="Restablecer Contraseña" />
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink id="btnExcel" style="margin-left: 1230px">
+                                            <p:graphicImage value="/images/excel.png" width="18"/>
+                                            <p:dataExporter type="xls" target="tablaUsuarios" fileName="usuarios" />
+                                    </h:commandLink>
+                                    <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                                </f:facet>
+                            </p:dataTable>
+                        </p:panel>   
+
+                    </h:form>
+
+                    <h:form id="formRegistrarUsuario">
+                        <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Nuevo Usuario" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 600px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                                <p:outputLabel value="ID Usuario*:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{usuariosBean.usuario.nameuser}" styleClass="outputLabel" size="12" required="true" requiredMessage="ID de usuario es requerido!"/>
+                                <p:outputLabel value="Nombre*:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{usuariosBean.usuario.firstnameuser}" styleClass="outputLabel" required="true" requiredMessage="Nombre de usuario es requerido!" size="48"/> 
+                                <p:outputLabel value="Apellido*:"  style="font-weight: bold;width: 50px;" />
+                                <p:inputText value="#{usuariosBean.usuario.lastnameuser}" styleClass="outputLabel" required="true" requiredMessage="Apellido de usuario es requerido!" size="48"/>    
+                                <p:outputLabel value="Role:"  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{usuariosBean.usuario.rol}" >
+                                    <f:selectItem  itemLabel="admin" itemValue="admin"/>
+                                    <f:selectItem  itemLabel="user" itemValue="user"/>
+                                    <f:selectItem  itemLabel="reference" itemValue="reference"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                <p:inputMask value="#{usuariosBean.usuario.phone}" styleClass="outputLabel" mask="9999-9999" size="12"/>
+                                <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{usuariosBean.usuario.emailuser}" styleClass="outputLabel" size="48" />
+                            </p:panelGrid>
+                            <p:spacer></p:spacer>
+                             <p:panelGrid columns="2" columnClasses="label, value"  style="width: 600px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">    
+                                <h:outputLabel for="pwd1" value="Ingrese Contraseña: " style="font-weight: bold;width: 50px;"/>
+                                <p:password id="pwd1" value="#{usuariosBean.usuario.password}" match="pwd2" label="Password 1" required="true" validatorMessage="La contraseña debe coincidir en ambos campos!!" />
+
+                                <h:outputLabel for="pwd2" value="Confirme Contraseña: " style="font-weight: bold;width: 50px;"/>
+                                <p:password id="pwd2" value="#{usuariosBean.usuario.password}" label="Password 2" required="true" />
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrar').hide()" actionListener="#{usuariosBean.nuevoUsuario()}"  update=":formMostrarUsuarios growl"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form>
+
+                    <h:form id="formModificarUsuarios">
+                        <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Editar Usuario" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 600px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="ID Usuario*:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{usuariosBean.usuario.nameuser}" styleClass="outputLabel" size="12" disabled="true"/>
+                                <p:outputLabel value="Nombre*:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{usuariosBean.usuario.firstnameuser}" styleClass="outputLabel" size="48"/> 
+                                <p:outputLabel value="Apellido*:"  style="font-weight: bold;width: 50px;" />
+                                <p:inputText value="#{usuariosBean.usuario.lastnameuser}" styleClass="outputLabel" required="true" requiredMessage="Nombre de paciente es requerido!" size="48"/>    
+                                <p:outputLabel value="Role:"  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{usuariosBean.usuario.rol}" >
+                                    <f:selectItem  itemLabel="admin" itemValue="admin"/>
+                                    <f:selectItem  itemLabel="user" itemValue="user"/>
+                                    <f:selectItem  itemLabel="reference" itemValue="reference"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                <p:inputMask value="#{usuariosBean.usuario.phone}" styleClass="outputLabel" mask="9999-9999" size="12"/>
+                                <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{usuariosBean.usuario.emailuser}" styleClass="outputLabel" size="48" />
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarUsuarios growl" actionListener="#{usuariosBean.modificarUsuario()}"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form>
+
+                    <h:form id="formPasswordUsuario">
+                        <p:dialog id="dlgpassword" widgetVar="dlgpassword" header="Reestablecer Contraseña de Usuario: #{usuariosBean.usuario.nameuser}" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 600px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                
+                                <h:outputLabel for="pwd1" value="Ingrese Contraseña: " />
+                                <p:password id="pwd1" value="#{usuariosBean.usuario.password}" match="pwd2" label="Password 1" required="true" validatorMessage="La contraseña debe coincidir en ambos campos!!" />
+
+                                <h:outputLabel for="pwd2" value="Confirme Contraseña: " />
+                                <p:password id="pwd2" value="#{usuariosBean.usuario.password}" label="Password 2" required="true" />
+
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgpassword').hide()"  update="formMostrarUsuarios growl" actionListener="#{usuariosBean.passUsuario()}" />
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgpassword').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form>
+                    
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

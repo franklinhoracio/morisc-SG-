@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Usuarios" table="usuarios" schema="public" optimistic-lock="version">
+        <id name="iduser" type="long">
+            <column name="iduser" />
+            <generator class="assigned" />
+        </id>
+        <property name="rol" type="string">
+            <column name="rol" length="15" not-null="true" />
+        </property>
+        <property name="nameuser" type="string">
+            <column name="nameuser" length="100" not-null="true" />
+        </property>
+        <property name="lastnameuser" type="string">
+            <column name="lastnameuser" length="100" not-null="true" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="10" />
+        </property>
+        <property name="emailuser" type="string">
+            <column name="emailuser" length="20" />
+        </property>
+        <property name="activo" type="java.lang.Boolean">
+            <column name="activo" />
+        </property>
+        <property name="inputdate" type="timestamp">
+            <column name="inputdate" length="29" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" />
+        </property>
+        <property name="firstnameuser" type="string">
+            <column name="firstnameuser" length="100" />
+        </property>
+        <property name="radiologo" type="java.lang.Boolean">
+            <column name="radiologo" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <set name="medicoses" table="medicos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iduser" />
+            </key>
+            <one-to-many class="model.Medicos" />
+        </set>
+        <set name="rxinterfaces" table="rxinterface" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idphysician" />
+            </key>
+            <one-to-many class="model.Rxinterface" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <title>moRisC</title>
+        <link rel="shortcut icon" type="image/x-icon"  href="images/favicon.ico" />
+    </h:head>
+
+    <h:body>
+
+        <div id="top" class="top ui-corner-all">
+           
+            <h:graphicImage value="/images/2-02.jpg" width="1310px"  class="ui-widget-header" style="background-color: highlight; " />
+
+            <h:form id="menuTab">  
+                <p:menubar>
+                    <p:menuitem value="Worklist"  url="mWorklist.xhtml" style="color: black"></p:menuitem> 
+                    <p:menuitem value="Informes" url="mInformes.xhtml" style="color: black"></p:menuitem> 
+                    <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: black"></p:menuitem>
+                    <p:submenu label="Mantenimientos" style="color: black; ">
+                        <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: black" />
+                        <p:menuitem value="Medicos" url="mMedicos.xhtml" style="color: black" />
+                        <p:menuitem value="Productos" url="mProductos.xhtml" style="color: black" />
+                        <p:menuitem value="Usuarios" url="mUsuarios.xhtml" style="color: black" />
+                    </p:submenu>
+                    <p:submenu label="Configuración"  style="color: black">
+                        <p:menuitem value="Todos los Estudios" url="#" disabled="true" style="color: black" />
+                        <p:menuitem value="Expediente" url="#" disabled="true" style="color: black" />
+                        <p:menuitem value="Mantenimiento" url="#" disabled="true" style="color: black" />
+                    </p:submenu>
+                    <p:submenu label="Reportes" style="color: black; ">
+                        <p:menuitem value="Dashboard" url="mDashboard.xhtml" style="color: black" />
+                        <p:menuitem value="Reporte 1" url="#" disabled="true" style="color: black" />
+                        <p:menuitem value="Reporte 2" url="#" disabled="true" style="color: black" />
+                        <p:menuitem value="Reporte 3" url="#" disabled="true" style="color: black" />
+                    </p:submenu>
+                    <f:facet name="options">
+                        <p:outputLabel value="#{loginBean.uname}   "  />
+                        <p:commandButton  action="#{loginBean.logout}" value="Salir" icon="ui-icon-extlink" ajax="false"/>
+                    </f:facet>
+
+                </p:menubar>
+            </h:form>
+            <h:graphicImage value="/images/barra2.png" width="100%" />
+        </div>
+        <div id="content" class="center_content"  >
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+    </h:body>
+    <script type="text/javascript">
+    </script>
+</html>

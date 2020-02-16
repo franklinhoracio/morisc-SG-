@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+     
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                
+                 
+
+        <h:form id="formMostrarProyecciones">
+
+            <p:dataTable var="tablaProyecciones" value="#{proyeccionesBean.cargos}"
+                         widgetVar="proyeccionesTable"
+                         emptyMessage="No hay registros disponibles para la busqueda"
+                         paginator="true" 
+                         rows="10" 
+                         paginatorPosition="top"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,20"
+                         currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                         selectionMode="single" 
+                         selection="#{proyeccionesBean.cargo}" 
+                         rowKey="#{tablaProyecciones.cpt}"
+                         sortBy="#{tablaProyecciones.cpt}" sortOrder="ascending"
+                         
+                         >
+                <f:facet name="header">
+                    <p:outputPanel class="center_content">
+                        <h:outputText value="Buscar: "  />
+                        <p:inputText id="globalFilter" onkeyup="PF('proyeccionesTable').filter()" style="width:150px" placeholder="Codigo o Producto"/>
+
+                    </p:outputPanel>
+                </f:facet>
+
+
+
+                <p:column headerText="Codigo" filterBy="#{tablaProyecciones.cpt}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                    <h:outputText value="#{tablaProyecciones.cpt}" />
+                </p:column>
+                <p:column headerText="Cargo" filterBy="#{tablaProyecciones.proc}" filterStyle="display:none" >
+                    <h:outputText value="#{tablaProyecciones.proc}" />
+                </p:column>
+                <p:column headerText="modalidad" width="10%">
+                    <h:outputText value="#{tablaProyecciones.modality}" />
+                </p:column>
+                <p:column headerText="precio" width="10%">
+                    <h:outputText value="#{tablaProyecciones.precio}" />
+                </p:column>
+                <p:column headerText="Acciones"  width="10%"  >
+                    <p:commandButton  icon="ui-icon-info"></p:commandButton>
+                    <p:commandButton  icon="ui-icon-trash"></p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

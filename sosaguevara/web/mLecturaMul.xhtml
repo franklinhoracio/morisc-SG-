@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+                    <f:event listener="#{rxinterfaceBean.selecRadiologo(event)}" type="preRenderView" />
+                    <p:growl id="growl"  showDetail="true" life="3000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formLectura" rendered="#{loginBean.roleActivo('admin')}"  >
+
+                        <p:panel   id="lectura" header="Paciente: #{rxinterfaceBean.rxinterface.paciente.lastnamepatient}, #{rxinterfaceBean.rxinterface.paciente.namepatient}  Edad: #{rxinterfaceBean.edad(rxinterfaceBean.rxinterface.paciente.datebirth)}" style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:outputLabel value="Estudios: " style="font-weight: bolder"/>
+                            <p:selectManyCheckbox id="estudios" value="#{rxinterfaceBean.listaInformeSel}" required="true" requiredMessage="Seleccione estudios a reportar!">
+                                <f:selectItems value="#{rxinterfaceBean.listaInformes}" />
+                            </p:selectManyCheckbox>
+                            <p:separator/>
+
+                            <h:panelGrid columns="2" width="500px" style="margin-left: 300px;">
+                                <p:outputLabel value="Radiologo: " style="font-weight: bolder"/>
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.usuarios.iduser}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                    <f:selectItems value="#{rxinterfaceBean.listaRadiologos}"/>
+                                </p:selectOneMenu> 
+
+
+                                <h:outputLabel value="Referente: " style="font-weight: bold"  />
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.medicos.idmedico}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                    <f:selectItem itemLabel="--- Seleccione ---" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaReferentes}"/>
+
+                                </p:selectOneMenu> 
+
+                                <h:outputLabel value="Aseguradora: " style="font-weight: bold"  />
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.aseguradoras.idaseguradora}" filter="true" filterMatchMode="contains"  style="width: 300px;">
+                                    <f:selectItems value="#{rxinterfaceBean.listaAseguradoras}"/>
+                                </p:selectOneMenu> 
+
+                                <h:outputLabel value="Tipo de Pago: " style="font-weight: bold"  />
+                                <p:selectOneButton id="tpagoButton" value="#{rxinterfaceBean.rxinterface.tipopago}" style="margin-left: auto;margin-right: auto;position: relative">
+                                    <f:selectItem itemLabel="Efectivo" itemValue="efectivo" />
+                                        <f:selectItem itemLabel="Cheque" itemValue="cheque" />
+                                        <f:selectItem itemLabel="Tarjeta" itemValue="tarjeta" />
+                                        <f:selectItem itemLabel="Credito" itemValue="credito" />
+                                </p:selectOneButton>
+
+                            </h:panelGrid>
+                            <p:separator/>
+                            <div style="text-align: center">
+                                <p:commandButton disabled="false" style="float: center" update="formPlantillas" value="PLANTILLAS" oncomplete="PF('dlgplantilla').show()" />                                
+
+                                <p:commandButton style="float: center" update="@form growl" value="GUARDAR" actionListener="#{rxinterfaceBean.registrarInformes()}" oncomplete="#{vistaPreviaBean.loadPreviewMul(rxinterfaceBean.rxinterface.accnumber, rxinterfaceBean.listaInformeSel)}"/>
+                                <p:commandButton  value="REGRESAR" actionListener="#{rxinterfaceBean.limpiarListaInformeSel()}" immediate="true" ajax="false" action="mInformes.xhmtl?faces-redirect=true"/>
+                                <p:outputLabel value="Imprimir: " style="font-weight: bolder;margin-left: 210px"  />
+                                <h:commandLink value="MEMBRETADA"  style="padding: .3em 1em;" actionListener="#{rxinterfaceBean.verReporteMulti()}" target="_blank" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-text ui-c"/>
+                                <h:commandLink value="PDF"  style="padding: .3em 1em;" actionListener="#{rxinterfaceBean.verReportePdfMulti()}" target="_blank" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-text ui-c"/>
+                                <p:separator/>
+                            </div>
+
+                            <p:panelGrid columns="2" style="height: 700px;margin-left: auto;margin-right: auto;" columnClasses="top_column, top_column">
+                                <p:column>
+                                    <div>
+                                        <p:textEditor   widgetVar="editor"  id="editor" value="#{rxinterfaceBean.rxinterface.report}"  style="margin-bottom:10px;width: 550px;height: 650px;margin-left: auto;margin-right: auto;" placeholder="Digite reporte">
+                                            <f:facet name="toolbar">
+                                                <span class="ql-formats">
+                                                </span>
+                                            </f:facet>
+                                        </p:textEditor>
+                                    </div>
+                                </p:column>
+                                <p:column>
+                                    <div>
+
+                                        <p:media id="viewer" cache="false" value="#{vistaPreviaBean.streamedContent}" player="pdf" rendered="#{vistaPreviaBean.streamedContent ne null}"  style="vertical-align: top;width: 550px;height: 700px">
+
+                                        </p:media>
+                                    </div>
+                                </p:column>
+                            </p:panelGrid>
+
+                            <h:form id="formPlantillas">
+                                <p:dialog id="dlgplantilla" widgetVar="dlgplantilla" header="Seleccion de Plantillas" showEffect="explode" hideEffect="explode"  modal="true" position="center"  resizable="true" responsive="true" width="1000" height="600" style="vertical-align: middle">    
+                                    <div >
+                                        <p:selectOneMenu id="listaplantillas" value="#{plantillasBean.plantilla.idplantilla}" filter="true" filterMatchMode="contains" style="width: 270px;">
+                                            <f:selectItems value="#{plantillasBean.listaPlantillas}" />
+                                            <p:ajax update="plantillaview" event="change" listener="#{plantillasBean.obtenerDatosPlantilla(plantillasBean.plantilla.idplantilla)}"/>
+
+                                        </p:selectOneMenu>
+
+                                        <p:textEditor id="plantillaview" value="#{plantillasBean.plantilla.plantilla}" style="width: 100% !important;"> 
+                                            <f:facet name="toolbar">
+                                                <span class="ql-formats">
+                                                </span>
+                                            </f:facet>
+                                        </p:textEditor>
+
+                                        <p:commandButton disabled="false" update="formLectura" value="REGRESAR" style="float: left"/>
+                                        <p:commandButton disabled="false" actionListener="#{rxinterfaceBean.agregarPlantilla(plantillasBean.plantilla.plantilla)}" update="formLectura" value="INSERTAR PLANTILLA" style="float: left" />                                
+
+                                    </div>
+                                </p:dialog>
+                            </h:form>  
+
+                        </p:panel> 
+                       
+                    </h:form> 
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

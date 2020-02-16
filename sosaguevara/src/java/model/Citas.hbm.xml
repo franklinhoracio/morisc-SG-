@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Citas" table="citas" schema="public" optimistic-lock="version">
+        <id name="idcitas" type="long">
+            <column name="idcitas" />
+            <generator class="assigned" />
+        </id>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="200" />
+        </property>
+        <property name="notas" type="string">
+            <column name="notas" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="nombre" length="200" />
+        </property>
+        <property name="apellido" type="string">
+            <column name="apellido" length="200" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="20" />
+        </property>
+        <property name="activo" type="string">
+            <column name="activo" length="4" />
+        </property>
+        <property name="realizado" type="string">
+            <column name="realizado" length="4" />
+        </property>
+        <property name="cancelado" type="string">
+            <column name="cancelado" length="4" />
+        </property>
+        <property name="horainicio" type="timestamp">
+            <column name="horainicio" length="35" />
+        </property>
+        <property name="horafin" type="timestamp">
+            <column name="horafin" length="35" />
+        </property>
+        <property name="confirmado" type="java.lang.Boolean">
+            <column name="confirmado" />
+        </property>
+        <property name="iduser" type="java.lang.Long">
+            <column name="iduser" />
+        </property>
+    </class>
+</hibernate-mapping>

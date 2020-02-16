@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                <h:form id="formMostrarMedicos"  title="Lista de Medicos:" >
+
+                    <p:panel   id="medicos" header="Medicos: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                        <p:dataTable id="tablaMedicos" var="tablaMedicos" value="#{medicosBean.medicos}"
+                                     widgetVar="medicosTable"
+                                     emptyMessage="No hay registros disponibles para la busqueda"
+                                     paginator="true" 
+                                     rows="15" 
+                                     reflow="true"
+                                     paginatorPosition="top"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="15,25,50"
+                                     currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                     selectionMode="single" selection="#{medicosBean.medico}" 
+                                     rowKey="#{tablaMedicos.idmedico}"
+                                     sortBy="#{tablaMedicos.idmedico}" sortOrder="ascending"
+                                     style="max-width: 1000px;margin-left:auto;margin-right:auto;"
+                                     >
+
+                            <f:facet name="header"  >
+                                <p:outputPanel class="left_content"  >
+                                    <h:outputText value="Buscar "  />
+                                    <p:inputText id="globalFilter" onkeyup="PF('medicosTable').filter()"  placeholder="Codigo/Nombre/# Junta"/>
+                                    <p:commandButton class="btnNuevoEstudio" value="Nuevo Medico" icon="fa fa-floppy-o" oncomplete="PF('dlgregistrar').show()"  update=":formRegistrarMedico" actionListener="#{medicosBean.inicializarMedico(actionevent)}" />
+
+                                </p:outputPanel>
+                            </f:facet>
+
+                           
+                            <p:column headerText="Nombre" filterBy="#{tablaMedicos.apellidomedico}, #{tablaMedicos.nombremedico}" filterStyle="display:none" filterMatchMode="contains" width="40%">
+                                <h:outputText value="#{tablaMedicos.apellidomedico}, #{tablaMedicos.nombremedico}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Numero Junta"  filterBy="#{tablaMedicos.juntavigilancia}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                                <h:outputText value="#{tablaMedicos.juntavigilancia}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Telefono"  width="10%">
+                                <h:outputText value="#{tablaMedicos.telefono}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Especialidad"  width="10%">
+                                <h:outputText value="#{tablaMedicos.especialidad}" style="font-size:11px;"/>
+                            </p:column>      
+                            <p:column headerText="Tipo"  width="10%">
+                                <h:outputText value="#{tablaMedicos.tipo}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Direcccion"  width="30%">
+                                <h:outputText value="#{tablaMedicos.direccionclinica}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column exportable="false" width="5%" >
+                                <p:commandButton id="editarMdBtn" icon="ui-icon-pencil" update="formModificarMedicos" oncomplete="PF('dlgmodificar').show()">
+                                    <f:setPropertyActionListener value="#{tablaMedicos}" target="#{medicosBean.medico}" />
+                                </p:commandButton>
+                                <p:tooltip id="tlteditarMdBtn" for="editarMdBtn" value="Modificar Registro" />
+
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                    <p:graphicImage value="/images/excel.png" width="18"/>
+                                    <p:dataExporter type="xls" target="tablaMedicos" fileName="medicos" />
+                                </h:commandLink>
+                                <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                            </f:facet>
+                        </p:dataTable>
+                    </p:panel> 
+
+                </h:form>
+
+                <h:form id="formRegistrarMedico">
+                    <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Nuevo Medico" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" width="550px">    
+                        <p:panelGrid columns="2" columnClasses="label, value"  style="margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                            <p:outputLabel value="Nombre: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.nombremedico}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Apellido: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.apellidomedico}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Tipo: "  style="font-weight: bold;width: 50px;"/>
+
+                            <p:selectOneMenu id="console" value="#{medicosBean.medico.tipo}">
+                                <f:selectItem itemLabel="radiologo" itemValue="radiologo" />
+                                <f:selectItem itemLabel="referente" itemValue="referente" />
+
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Numero de Junta: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.juntavigilancia}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Especialidad: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.especialidad}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Direccion "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.direccionclinica}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Telefono: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.telefono}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Email:"  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.email}" styleClass="outputLabel" size="50"/> 
+                        </p:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrar').hide()"  update="formMostrarMedicos growl" actionListener="#{medicosBean.insertarMedico()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form> 
+
+
+                <h:form id="formModificarMedicos">
+                    <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Editar Medico" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" width="550px">    
+                        <p:panelGrid columns="2" columnClasses="label, value"  style="margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                            <p:outputLabel value="Nombre: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.nombremedico}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Apellido: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.apellidomedico}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Tipo: "  style="font-weight: bold;width: 50px;"/>
+
+                            <p:selectOneMenu id="console" value="#{medicosBean.medico.tipo}">
+                                <f:selectItem itemLabel="radiologo" itemValue="radiologo" />
+                                <f:selectItem itemLabel="referente" itemValue="referente" />
+
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Numero de Junta: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.juntavigilancia}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Especialidad: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.especialidad}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Direccion "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.direccionclinica}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Telefono: "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.telefono}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Email:"  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{medicosBean.medico.email}" styleClass="outputLabel" size="50"/> 
+
+                        </p:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarMedicos growl" actionListener="#{medicosBean.modificarMedico()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

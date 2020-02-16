@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Proyecciones" table="proyecciones" schema="public" optimistic-lock="version">
+        <id name="cpt" type="long">
+            <column name="cpt" />
+            <generator class="assigned" />
+        </id>
+        <property name="proc" type="string">
+            <column name="proc" length="200" not-null="true" />
+        </property>
+        <property name="modality" type="string">
+            <column name="modality" length="10" />
+        </property>
+        <property name="activo" type="boolean">
+            <column name="activo" not-null="true" />
+        </property>
+        <property name="precio" type="big_decimal">
+            <column name="precio" precision="10" />
+        </property>
+        <property name="fecha" type="date">
+            <column name="fecha" length="13" not-null="true" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <set name="rxinterfaces" table="rxinterface" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cpt" />
+            </key>
+            <one-to-many class="model.Rxinterface" />
+        </set>
+    </class>
+</hibernate-mapping>

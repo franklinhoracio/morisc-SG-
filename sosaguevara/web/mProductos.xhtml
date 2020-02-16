@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+     <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <h:form id="formMostrarProductos"  >
+
+                        <p:panel   id="informes" header="Estudios: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:dataTable id="tablaCargos" var="tablaCargos" value="#{proyeccionesBean.cargos}"
+                                         widgetVar="cargosTable"
+                                         emptyMessage="No hay registros disponibles para la busqueda"
+                                         paginator="true" 
+                                         rows="15" 
+                                         reflow="true"
+                                         paginatorPosition="top"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="15,25,50"
+                                         currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                         selectionMode="single" selection="#{proyeccionesBean.cargo}" 
+                                         rowKey="#{tablaCargos.cpt}"
+                                         sortBy="#{tablaCargos.cpt}" sortOrder="ascending"
+                                         style="max-width: 800px;margin-left:auto;margin-right:auto;"
+                                         >
+
+                                <f:facet name="header"  >
+                                    <p:outputPanel class="left_content"  >
+                                        <h:outputText value="Buscar "  />
+                                        <p:inputText id="globalFilter" onkeyup="PF('cargosTable').filter()"  placeholder="Codigo/Estudio/Modalidad"/>
+                                        <p:commandButton class="btnNuevoEstudio"  value="Nuevo Producto" icon="fa fa-floppy-o" oncomplete="PF('dlgregistrar').show()"  update=":formRegistrarProducto" actionListener="#{proyeccionesBean.inicializarCargo(actionevent)}" />
+
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Codigo" width="10%" sortBy="cpt" filterBy="#{tablaCargos.cpt}" filterStyle="display:none" filterMatchMode="contains" >
+                                    <h:outputText value="#{tablaCargos.cpt}" style="font-size:11px;font-weight: bold"/>
+                                </p:column>
+                                <p:column headerText="Estudio" width="40%" filterBy="#{tablaCargos.proc}" filterStyle="display:none" filterMatchMode="contains" >
+                                    <h:outputText value="#{tablaCargos.proc}" style="font-size:11px;"/>
+                                </p:column>
+                                <p:column headerText="Modalidad" width="8%" filterBy="#{tablaCargos.modality}" filterStyle="display:none" filterMatchMode="contains" style="text-align: center !important" >
+                                    <h:outputText value="#{tablaCargos.modality}" style="font-size:11px;"/>
+                                </p:column>
+                                <p:column headerText="Precio"  width="5%" style="text-align: center !important">
+                                    <h:outputText value="#{tablaCargos.precio}" style="font-size:11px;"/>
+                                </p:column>       
+
+
+                                <p:column exportable="false" width="8%" >
+                                    <p:commandButton id="editarProBtn" icon="ui-icon-pencil" update="formModificarProducto" oncomplete="PF('dlgmodificar').show()">
+                                        <f:setPropertyActionListener value="#{tablaCargos}" target="#{proyeccionesBean.cargo}" />
+                                    </p:commandButton>
+                                    <p:tooltip id="tlteditarProBtn" for="editarProBtn" value="Modificar Registro" />
+
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                        <p:graphicImage value="/images/excel.png" width="18"/>
+                                        <p:dataExporter type="xls" target="tablaCargos" fileName="productos" />
+                                    </h:commandLink>
+                                    <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                                </f:facet>
+
+
+                            </p:dataTable>
+
+                        </p:panel>    
+
+                    </h:form>
+
+                     <h:form id="formRegistrarProducto">
+                        <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Nuevo Producto" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="Codigo: "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="" styleClass="outputLabel" disabled="true"/> 
+                                <p:outputLabel value="Estudio: "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{proyeccionesBean.cargo.proc}" styleClass="outputLabel" size="100"/> 
+                                <p:outputLabel value="Modalidad: "  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{proyeccionesBean.cargo.modality}" >
+                                    <f:selectItem itemLabel="CR" itemValue="CR"/>
+                                    <f:selectItem itemLabel="DX" itemValue="DX"/>
+                                    <f:selectItem itemLabel="MG" itemValue="MG"/>
+                                    <f:selectItem itemLabel="RF" itemValue="RF"/>
+                                    <f:selectItem itemLabel="CT" itemValue="CT"/>
+                                    <f:selectItem itemLabel="MR" itemValue="MR"/>
+                                    <f:selectItem itemLabel="XA" itemValue="XA"/>
+                                    <f:selectItem itemLabel="US" itemValue="US"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Precio: "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputNumber value="#{proyeccionesBean.cargo.precio}" styleClass="outputLabel" required="true" requiredMessage="Precio del producto es requerido!"/>  
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrar').hide()"  update="formMostrarProductos growl" actionListener="#{proyeccionesBean.insertarProducto()}"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form> 
+
+                    <h:form id="formModificarProducto">
+                        <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Modificar Producto" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="Codigo: "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="" styleClass="outputLabel" disabled="true"/> 
+                                <p:outputLabel value="Estudio: "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{proyeccionesBean.cargo.proc}" styleClass="outputLabel" size="100"/> 
+                                <p:outputLabel value="Modalidad: "  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{proyeccionesBean.cargo.modality}" >
+                                    <f:selectItem itemLabel="CR" itemValue="CR"/>
+                                    <f:selectItem itemLabel="DX" itemValue="DX"/>
+                                    <f:selectItem itemLabel="MG" itemValue="MG"/>
+                                    <f:selectItem itemLabel="RF" itemValue="RF"/>
+                                    <f:selectItem itemLabel="CT" itemValue="CT"/>
+                                    <f:selectItem itemLabel="MR" itemValue="MR"/>
+                                    <f:selectItem itemLabel="XA" itemValue="XA"/>
+                                    <f:selectItem itemLabel="US" itemValue="US"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Precio: "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{proyeccionesBean.cargo.precio}" styleClass="outputLabel"/>  
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarProductos growl" actionListener="#{proyeccionesBean.modificarProducto()}"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form> 
+
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

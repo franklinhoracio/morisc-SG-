@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <p:growl id="growl"  showDetail="true" life="3000" />
+                <h:form id="referentes"  title="Reporte Diario:"  >
+                    <p:panel   id="reportes"  style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+
+                        <p:tabView>
+                            <p:tab title="Total">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <h:outputLabel value="Referente: " style="margin-top: 0"  />
+                                    <p:selectOneMenu id="smRefentes" value="#{referentesReportBean.referente.idmedico}" filter="true" filterMatchMode="contains" required="true" style="width: 350px;">
+                                        <f:selectItems value="#{referentesReportBean.listaReferentes}"/>
+                                        <p:ajax update="referentes" event="change" listener="#{referentesReportBean.cantidadEstudiosCalc()}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <h:outputText value="Cantidad de Estudios Total: " />
+                                    <h:outputText value="#{referentesReportBean.cantidadEstudios}" />
+                                    <h:outputText value="Cantidad de Estudios Rayos X: " />
+                                    <h:outputText value="#{referentesReportBean.cantidadEstudiosRx}" />
+                                    <h:outputText value="Cantidad de Estudios Mamografia: " />
+                                    <h:outputText value="#{referentesReportBean.cantidadEstudiosMG}" />
+                                    <h:outputText value="Cantidad de Estudios Ultrasonido: " />
+                                    <h:outputText value="#{referentesReportBean.cantidadEstudiosUS}" />
+                                    <h:outputText value="Cantidad de Estudios Fluoroscopia: " />
+                                    <h:outputText value="#{referentesReportBean.cantidadEstudiosRF}" />
+                                    <h:outputText value="Cantidad de Estudios TAC: " />
+                                    <h:outputText value="#{referentesReportBean.cantidadEstudiosCT}" />
+                                </h:panelGrid>
+                            </p:tab>
+
+                            <p:tab title="Diario" disabled="true">
+                                <p:toolbar style="background-color:  #ffffff; ">
+                                    <f:facet name="left">
+                                        <p:outputLabel value="Fecha Inicial: " style="color: black"/>
+                                        <p:calendar    id="fechainicial" maxdate="#{referentesReportBean.today}" value="#{referentesReportBean.initdate}" widgetVar="fechainicial"  navigator="true" pattern="dd-MM-yyyy" style="margin-left: 1px;">
+                                            <p:ajax event="dateSelect" update="fechafinal" listener="#{referentesReportBean.createBarModels()}" />
+                                        </p:calendar>
+                                        <p:outputLabel value="      Fecha Final " style="color: black"/>
+                                        <p:calendar    id="fechafinal" maxdate="#{referentesReportBean.today}" mindate="#{referentesReportBean.initdate}" value="#{referentesReportBean.finaldate}" widgetVar="fechafinal"  navigator="true" pattern="dd-MM-yyyy" style="margin-left: 1px;">
+                                        </p:calendar>
+                                    </f:facet>
+                                </p:toolbar>
+
+                                <div  style="margin-top: 20px;">
+                                    <div >
+                                        <p:chart responsive="true" type="bar" model="#{referentesReportBean.barModel}" style="height:500px"/>
+                                    </div>
+
+                                </div>
+                            </p:tab>
+
+                            <p:tab title="Mensual" disabled="true">
+                                <p:toolbar style="background-color:  #ffffff; ">
+                                    <f:facet name="left">
+                                        <p:outputLabel value="Mes Inicial: " style="color: black;vertical-align: top"/>
+                                        <p:selectOneMenu id="mesinicial" style="width: 170px;">
+                                            <f:selectItem itemLabel="Enero" itemValue="01" />
+                                            <f:selectItem itemLabel="Febrero" itemValue="02" />
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="      Mes Final " style="color: black;vertical-align: top"/>
+                                        <p:selectOneMenu id="mesfinal" style="width: 170px;">
+                                            <f:selectItem itemLabel="Enero" itemValue="01" />
+                                            <f:selectItem itemLabel="Febrero" itemValue="02" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:toolbar>
+
+                                <div  style="margin-top: 20px;">
+                                    <div >
+                                        <p:chart responsive="true" type="bar" model="#{referentesReportBean.barModel}" style="height:500px"/>
+                                    </div>
+
+                                </div>
+                            </p:tab>
+
+                            <p:tab title="Tipos de Estudio" disabled="true">
+                                <p:toolbar style="background-color:  #ffffff; ">
+
+                                </p:toolbar>
+
+                                <div  style="margin-top: 20px;">
+                                    <div >
+                                        <p:chart responsive="true" type="bar" model="#{referentesReportBean.horizontalBarModel}" style="height:auto"/>
+                                    </div>
+
+                                </div>
+                            </p:tab>
+
+                        </p:tabView>
+
+                    </p:panel> 
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

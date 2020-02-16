@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+        <link href="./resources/css/cssLayout.css" rel="stylesheet" type="text/css"/> 
+        <link href="./resources/css/default.css" rel="stylesheet" type="text/css"/> 
+        <link href="./resources/css/progress.css" rel="stylesheet" type="text/css"/>
+        <link href="./resources/css/bootstrap-fullcalendar.css" rel="stylesheet" type="text/css"/>
+        <h:outputScript name="js/progress.js" target="head"/>
+        <title>moRisC</title>
+        <link rel="shortcut icon" type="image/x-icon"  href="images/favicon/favicon.ico" />
+
+        <script type="text/javascript">
+            //<![CDATA[
+            function start() {
+                PF('startButton1').disable();
+
+                window['progress'] = setInterval(function () {
+                    var pbClient = PF('pbClient'),
+                            oldValue = pbClient.getValue(),
+                            newValue = oldValue + 3;
+
+                    pbClient.setValue(pbClient.getValue() + 3);
+
+                    if (newValue === 100) {
+                        clearInterval(window['progress']);
+                    }
+
+
+                }, 1000);
+            }
+
+            function fill() {
+                PF('pbClient').setValue(100);
+                clearInterval(window['progress']);
+            }
+
+            function cancel() {
+                PF('pbClient').setValue(100);
+                clearInterval(window['progress']);
+                PF('pbClient').setValue(0);
+                PF('startButton1').enable();
+            }
+            $(function () {
+                $('.sidemenu-toggle').on('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $('.sidemenu').toggleClass('is-visible');
+                    $('body.sidemenu-enabled').toggleClass('sidemenu-open');
+                    $('.sidemenu').toggleClass('sidemenu-open');
+                });
+            });
+
+            $(document).on('click', function (e) {
+                var opened = $('body').hasClass('sidemenu-open');
+                if (opened === true) {
+                    $('.sidemenu').removeClass('is-visible');
+                    $('body').removeClass('sidemenu-open');
+                }
+
+            });
+            //]]>                
+        </script>
+    </h:head>
+
+    <h:body style="background-color: #ffffff;background: #ffffff">
+
+        <div id="top"  style="max-width: 1300px;min-width: 200px;width: auto;max-height: 200px;">
+            <h:graphicImage value="/images/logoI.jpg"  class="showImage " />
+            <h:graphicImage value="/images/banner3.jpg" width="100%" usemap="#mapname" class="showHide" style="padding: 0px;top: 0px;border-radius:5px 5px 0px 0px;" >
+                <map name="mapname">
+                    <area shape="rect" coords="50, 0, 220, 120" href="mWorklist.xhtml" alt="alttext" />
+                </map>
+            </h:graphicImage>
+            <h:form  class="showVisible ">
+                <a href="#" class="sidemenu-toggle">
+                    <h:graphicImage value="/images/menub.png" style="margin-right: 20px" />
+                </a>
+
+            </h:form>
+            <h:form id="menuTab">
+                <p:menubar style="border-radius:0px;outline-width: 0px;" class="showHide">
+                    <p:menuitem value="Worklist"  url="mWorklist.xhtml"  style="color: #{colorBean.colorurl1};background-color:#{colorBean.back1}"></p:menuitem> 
+                    <p:menuitem value="Informes" url="mInformes.xhtml" style="color: #{colorBean.colorurl2};background-color:#{colorBean.back2}"></p:menuitem> 
+                    <p:menuitem value="Finalizados" url="mFinalizados.xhtml" style="color: #{colorBean.colorurl4};background-color:#{colorBean.back4}" update="mFinalizados">
+                    </p:menuitem>
+                    <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: #{colorBean.colorurl3};background-color:#{colorBean.back3}"></p:menuitem>
+                    <p:menuitem value="Citas" disabled="false" url="mCitas.xhtml" style="color: black" />
+                    <p:submenu label="Herramientas" style="color: black;">   
+                        <p:menuitem value="Historial del Paciente" url="mFichaPaciente.xhtml" disabled="false" style="color: black" />
+                        <p:menuitem value="Historial de Estudios" url="mEstudios.xhtml" disabled="false" style="color: black" />
+                        <p:menuitem value="Fusión de Pacientes" url="mFusion.xhtml" disabled="false" style="color: black" />
+                        <p:menuitem value="Configuración Correo" url="mMailConfig.xhtml" style="color: black" />
+                    </p:submenu>
+                    <p:submenu label="Mantenimientos" style="color: black;" rendered="#{loginBean.roleActivo('admin')}">
+                        <p:menuitem value="Aseguradoras" url="mAseguradoras.xhtml" style="color: black" />
+                        <p:menuitem value="Medicos" url="mMedicos.xhtml" style="color: black" />
+                        <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: black" />
+                        <p:menuitem value="Plantillas" url="mPlantillas.xhtml" style="color: black" />
+                        <p:menuitem value="Productos" url="mProductos.xhtml" style="color: black" />
+                        <p:menuitem value="Usuarios" url="mUsuarios.xhtml" style="color: black" />
+                    </p:submenu>
+                    <p:submenu label="Reportes" style="color: black;" rendered="#{loginBean.roleActivo('admin')}">
+                        <p:menuitem value="Dashboard" url="mDashboard.xhtml" style="color: black" />
+                        <p:menuitem value="Distribucion de Pacientes" url="mCantidadPacientes.xhtml" style="color: black" />
+                        <p:menuitem value="Ranking referentes" disabled="false" url="mMedicosTop.xhtml" style="color: black" />
+                        <p:menuitem value="Referentes" url="mReportReferentes.xhtml" style="color: black" />
+                        <p:menuitem value="Informe Diario" url="mInfoDiario.xhtml" style="color: black" />
+                    </p:submenu>
+                    <f:facet class="showHide" name="options">
+                        <p:outputLabel value="#{loginBean.uname}   "  />
+                        <p:commandButton  action="#{loginBean.logout}" value="Salir" icon="fa fa-sign-out" ajax="false"/>
+                    </f:facet>
+
+                </p:menubar>
+            </h:form>
+            <h:graphicImage class="showHide"  value="/images/barra2.png" width="100%" style="border-radius:0px 0px 5px 5px;" />
+        </div>
+
+
+
+        <div class="sidemenu">
+
+            <h:form id="formMenuLateral" >
+                <p:panelMenu style="width:100%;background: white;" >
+                    <p:submenu label="Menu" expanded="true">  
+                        <p:menuitem value="Worklist"  url="mWorklist.xhtml"  style="color: black" ></p:menuitem> 
+                        <p:menuitem value="Informes" url="mInformes.xhtml" style="color: black" ></p:menuitem> 
+                        <p:menuitem value="Finalizados" url="mFinalizados.xhtml" style="color: black" ></p:menuitem>
+                        <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: black"></p:menuitem>
+                        <p:menuitem value="Citas" disabled="false" url="mCitas.xhtml" style="color: black" />
+                    </p:submenu> 
+                    <p:menuitem value="Pacientes" url="mPacientes.xhtml"></p:menuitem>
+                    <p:submenu label="Mantenimientos" expanded="false">
+                        <p:menuitem value="Aseguradoras" url="mAseguradoras.xhtml" style="color: black" />
+                        <p:menuitem value="Medicos" url="mMedicos.xhtml" style="color: black" />
+                        <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: black" />
+                        <p:menuitem value="Plantillas" url="mPlantillas.xhtml" style="color: black" />
+                        <p:menuitem value="Productos" url="mProductos.xhtml" style="color: black" />
+                        <p:menuitem value="Usuarios" url="mUsuarios.xhtml" style="color: black" />
+                        <p:menuitem value="Configuración Correo" url="mMailConfig.xhtml" style="color: black" />
+                    </p:submenu>
+                    <p:submenu label="Reportes" expanded="true">
+                        <p:menuitem value="Dashboard" url="mDashboard.xhtml" style="color: black" />
+                        <p:menuitem value="Pacientes" url="mCantidadPacientes.xhtml" style="color: black" />
+                        <p:menuitem value="Ranking referentes" disabled="true" url="#" style="color: black" />
+                        <p:menuitem value="Referentes" url="mReportReferentes.xhtml" style="color: black" />
+                        <p:menuitem value="Informe Diario" url="mInfoDiario.xhtml" style="color: black" />
+                    </p:submenu>
+                    <p:submenu label="Usuario: #{loginBean.uname}" expanded="true">
+                        <p:menuitem value="Salir" action="#{loginBean.logout}"  style="color: black" />
+                    </p:submenu>
+                </p:panelMenu>
+
+            </h:form> 
+
+        </div>
+
+
+        <div id="content" class="content"  >
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+        <div class="footer">
+            Clínica de Radiología y Ultrasonografía Sosa - Guevara
+            <br/>
+            Clínicas Medicas, San Salvador Tel.: (503) 2225-7846 , (503) 2226-0307
+        </div> 
+    </h:body>
+
+</html>

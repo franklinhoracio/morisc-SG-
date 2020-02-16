@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportemembretemul_1" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="68e32b70-a67f-4856-ae02-986eb3e76aa8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="access" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="estudios" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT idpatient, 
+idphysician, 
+idreference, 
+report, 
+datestudy, 
+date,
+r.cpt, 
+namepatient || ' ' ||lastnamepatient as nombrepaciente, 
+proc, 
+nombremedico || ' ' || apellidomedico as referente, 
+firstnameuser || ' ' || lastnameuser as radiologo,
+EXTRACT(YEAR FROM age(cast(p.datebirth as date)))|| 'A ' || EXTRACT(MONTH FROM age(cast(p.datebirth as date))) || 'M ' || EXTRACT(DAY FROM age(cast(p.datebirth as date))) || 'D ' as edad
+FROM rxinterface r 
+inner join paciente p ON r.idpatient = p.id_paciente
+inner join medicos m ON r.idreference = m.idmedico
+inner join proyecciones e ON r.cpt = e.cpt
+inner join usuarios u ON r.idphysician = u.iduser
+where r.accnumber = $P{access}]]>
+	</queryString>
+	<field name="idpatient" class="java.lang.String"/>
+	<field name="idphysician" class="java.lang.Long"/>
+	<field name="idreference" class="java.lang.Long"/>
+	<field name="report" class="java.lang.String"/>
+	<field name="datestudy" class="java.sql.Timestamp"/>
+	<field name="date" class="java.sql.Date"/>
+	<field name="cpt" class="java.lang.Long"/>
+	<field name="nombrepaciente" class="java.lang.String"/>
+	<field name="proc" class="java.lang.String"/>
+	<field name="referente" class="java.lang.String"/>
+	<field name="radiologo" class="java.lang.String"/>
+	<field name="edad" class="java.lang.String"/>
+	<pageHeader>
+		<band height="226">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="192" y="135" width="376" height="18" uuid="3f39eaf9-1b9a-41a8-9222-3f1040510ef7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombrepaciente}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="192" y="153" width="376" height="18" uuid="87179e0e-7d52-4187-b3f6-c5eb9defad67"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referente}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+				<reportElement x="192" y="172" width="376" height="18" uuid="1596fdc1-5ec0-47ea-863c-2568375b4990"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="116" y="135" width="72" height="18" uuid="bdd8308f-6886-4b69-b44a-9781a24ce116"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paciente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="116" y="153" width="72" height="18" uuid="47e5d716-994d-4a48-9676-ccc3eb5ed9ed"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Doctor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="116" y="171" width="72" height="19" uuid="ecd2b4ee-c488-46a7-bbf0-044288c23ea1"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+</jasperReport>

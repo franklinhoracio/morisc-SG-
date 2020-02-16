@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+                   
+                    <h:form id="formMenuLateral"  >
+                        <p:panelMenu style="width:100%" >
+                            <p:submenu label="Menu" expanded="true">  
+
+                                <p:menuitem value="Worklist"  url="mWorklist.xhtml"  style="color: black" ></p:menuitem> 
+                                <p:menuitem value="Informes" url="mInformes.xhtml" style="color: black" ></p:menuitem> 
+                                <p:menuitem value="Finalizados" url="mFinalizados.xhtml" style="color: black" ></p:menuitem>
+                                <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: black"></p:menuitem>
+                            </p:submenu> 
+                            <p:menuitem value="Pacientes" url="mPacientes.xhtml"></p:menuitem>
+                            <p:submenu label="Mantenimientos" expanded="false">
+                                <p:menuitem value="Aseguradoras" url="mAseguradoras.xhtml" style="color: black" />
+                                <p:menuitem value="Medicos" url="mMedicos.xhtml" style="color: black" />
+                                <p:menuitem value="Pacientes" url="mPacientes.xhtml" style="color: black" />
+                                <p:menuitem value="Productos" url="mProductos.xhtml" style="color: black" />
+                                <p:menuitem value="Usuarios" url="mUsuarios.xhtml" style="color: black" />
+                                <p:menuitem value="Configuración Correo" url="mMailConfig.xhtml" style="color: black" />
+                            </p:submenu>
+                            <p:submenu label="Reportes" expanded="true">
+                                <p:menuitem value="Dashboard" url="mDashboard.xhtml" style="color: black" />
+                                <p:menuitem value="Informe Diario" url="mInfoDiario.xhtml" style="color: black" />
+                            </p:submenu>
+                            <p:submenu label="Usuario: #{loginBean.uname}" expanded="true">
+                                <p:menuitem value="Salir" action="#{loginBean.logout}"  style="color: black" />
+                            </p:submenu>
+                        </p:panelMenu>
+
+
+
+                    </h:form> 
+
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

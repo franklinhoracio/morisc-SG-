@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <title>moRisC</title>
+        <link rel="shortcut icon" type="image/x-icon"  href="images/favicon.ico" />
+    </h:head>
+
+    <h:body>
+
+        <div id="top" class="top">
+            <!--
+            <h:graphicImage value="/images/title.jpg" width="100%" class="ui-widget-header ui-corner-all" />
+            -->
+            <h:form id="menuTab">  
+                <p:menubar>
+                    <p:menuitem value="Worklist" url="#" style="color: black"></p:menuitem> 
+                    <p:menuitem value="Informes" url="#" style="color: black"></p:menuitem> 
+                    <p:menuitem value="Pacientes" url="#" style="color: black"></p:menuitem> 
+                    <p:menuitem value="Medicos" url="#" style="color: black"></p:menuitem> 
+                    <p:menuitem value="Productos" url="#" style="color: black"></p:menuitem> 
+                    <p:menuitem value="Reportes" url="#" style="color: black"></p:menuitem> 
+                    <f:facet name="options">
+                        <p:outputLabel value="#{loginBean.uname}   "  />
+                        <p:commandButton  action="#{loginBean.logout}" value="Salir" icon="ui-icon-extlink" ajax="false"/>
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+            <h:graphicImage value="/images/barra2.png" width="100%" />
+        </div>
+        <div id="content" class="center_content"  >
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+
+
+    </h:body>
+    <script type="text/javascript">
+        //<![CDATA[
+        function gopacientes(xhr, status, args) {
+            window.location = 'mPacientes.xhtml';
+        }
+        function gopaciente(xhr, status, args) {
+            window.location = 'smPaciente.xhtml';
+        }
+        function gomedicos(xhr, status, args) {
+            window.location = 'mMedicos.xhtml';
+        }
+        function gomedico(xhr, status, args) {
+            window.location = 'smMedico.xhtml';
+        }
+        function gocargo(xhr, status, args) {
+            window.location = 'smCargos.xhtml';
+        }
+        function gowklst(xhr, status, args) {
+            window.location = 'mWorklist.xhtml';
+        }
+        function goinformes(xhr, status, args) {
+            window.location = 'mInformes.xhtml';
+        }
+        function handlePacienteRequest(xhr, status, args) {
+            if (!args.validationFailed && args.Ingresado) {
+                setTimeout(function () {
+                    window.location = 'mPacientes.xhtml';
+                }, 1000);
+            }
+        }
+        //]]>
+    </script>
+</html>

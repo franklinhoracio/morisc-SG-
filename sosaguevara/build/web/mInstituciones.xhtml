@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                <h:form id="formMostrarInstituciones"   >
+
+                    <p:panel   id="medicos" header="Instituciones " style="margin-left: auto; margin-right: auto; width: 1300px; background-color:  white">
+                        <p:dataTable id="tablaInstituciones" var="tablaInstituciones" value="#{institucionesBean.instituciones}"
+                                     widgetVar="institucionesTable"
+                                     emptyMessage="No hay registros disponibles para la busqueda"
+                                     paginator="true" 
+                                     rows="10" 
+                                     paginatorPosition="top"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,20,50"
+                                     currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                     selectionMode="single" selection="#{institucionesBean.institucion}" 
+                                     rowKey="#{tablaInstituciones.idinstitucion}"
+                                     sortBy="#{tablaInstituciones.idinstitucion}" sortOrder="ascending"
+                                     >
+
+                            <f:facet name="header"  >
+                                <p:outputPanel class="left_content"  >
+                                    <h:outputText value="Buscar "  />
+                                    <p:inputText id="globalFilter" onkeyup="PF('institucionesTable').filter()"  placeholder="Codigo/Institucion"/>
+
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column headerText="Codigo" sortBy="idmedico" filterBy="#{tablaInstituciones.idinstitucion}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                                <h:outputText value="#{tablaInstituciones.idinstitucion}" style="font-size:11px;font-weight: bold"/>
+                            </p:column>
+                            <p:column headerText="Insitucion" filterBy="#{tablaInstituciones.institucion}" filterStyle="display:none" filterMatchMode="contains" width="50%">
+                                <h:outputText value="#{tablaInstituciones.institucion}" style="font-size:11px;"/>
+                            </p:column>
+     
+                            <p:column headerText="Fecha de Ingreso"  width="10%">
+                                <h:outputText value="#{tablaInstituciones.auFechainsert}" style="font-size:11px;"/>
+                            </p:column>
+                            
+                            <p:column exportable="false" width="5%" >
+                                    <p:commandButton id="editarInsBtn" icon="ui-icon-pencil" update="formModificarInstitucion" oncomplete="PF('dlgmodificar').show()">
+                                        <f:setPropertyActionListener value="#{tablaInstituciones}" target="#{institucionesBean.institucion}" />
+                                    </p:commandButton>
+                                    <p:tooltip id="tlteditarInsBtn" for="editarInsBtn" value="Modificar Registro" />
+
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink id="btnExcel" style="margin-left: 1230px">
+                                        <p:graphicImage value="/images/excel.png" width="18"/>
+                                        <p:dataExporter type="xls" target="tablaInstituciones" fileName="insituciones" />
+                                    </h:commandLink>
+                                    <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                                </f:facet>
+                            
+                            
+                        </p:dataTable>
+                        
+                        <p:commandButton  value="Nueva Institucion" icon="ui-icon-disk" oncomplete="PF('dlgregistrar').show()"  update=":formRegistrarInstitucion" actionListener="#{institucionesBean.inicializarInstitucion(actionevent)}" />
+                    </p:panel>     
+                </h:form>
+
+                <h:form id="formRegistrarInstitucion">
+                    <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Nueva Institucion" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                        <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                            <p:outputLabel value="Insitucion:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{institucionesBean.institucion.institucion}" styleClass="outputLabel"/> 
+                            
+                        </p:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrar').hide()"  update="formMostrarInstituciones growl" actionListener="#{institucionesBean.insertarInstitucion()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form> 
+
+
+                <h:form id="formModificarInstitucion">
+                    <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Editar Insitucion" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                        <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                            <p:outputLabel value="Institucion:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{institucionesBean.institucion.institucion}" styleClass="outputLabel"/> 
+                            
+                        </p:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarInstituciones growl" actionListener="#{institucionesBean.modificarInstitucion()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

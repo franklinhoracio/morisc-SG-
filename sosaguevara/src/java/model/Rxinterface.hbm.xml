@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 22, 2019 8:33:37 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Rxinterface" table="rxinterface" schema="public" optimistic-lock="version">
+        <id name="accnumber" type="long">
+            <column name="accnumber" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="aseguradoras" class="model.Aseguradoras" fetch="select">
+            <column name="aseguradora" />
+        </many-to-one>
+        <many-to-one name="medicos" class="model.Medicos" fetch="select">
+            <column name="idreference" />
+        </many-to-one>
+        <many-to-one name="paciente" class="model.Paciente" fetch="select">
+            <column name="idpatient" length="30" not-null="true" />
+        </many-to-one>
+        <many-to-one name="proyecciones" class="model.Proyecciones" fetch="select">
+            <column name="cpt" />
+        </many-to-one>
+        <many-to-one name="usuarios" class="model.Usuarios" fetch="select">
+            <column name="idphysician" />
+        </many-to-one>
+        <property name="report" type="string">
+            <column name="report" length="50000" />
+        </property>
+        <property name="control" type="string">
+            <column name="control" length="10" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="10" />
+        </property>
+        <property name="obsertec" type="string">
+            <column name="obsertec" length="25" />
+        </property>
+        <property name="datestudy" type="timestamp">
+            <column name="datestudy" length="35" />
+        </property>
+        <property name="date" type="date">
+            <column name="date" length="13" />
+        </property>
+        <property name="cantidad" type="java.lang.Integer">
+            <column name="cantidad" />
+        </property>
+        <property name="timestudy" type="time">
+            <column name="timestudy" length="21" />
+        </property>
+        <property name="tipopago" type="string">
+            <column name="tipopago" length="100" />
+        </property>
+        <property name="pagado" type="big_decimal">
+            <column name="pagado" precision="10" />
+        </property>
+        <property name="institucion" type="string">
+            <column name="institucion" length="100" />
+        </property>
+        <property name="pagoaseguradora" type="java.lang.Double">
+            <column name="pagoaseguradora" precision="17" scale="17" />
+        </property>
+        <property name="pagopaciente" type="java.lang.Double">
+            <column name="pagopaciente" precision="17" scale="17" />
+        </property>
+        <property name="auFechainsert" type="time">
+            <column name="au_fechainsert" length="21" />
+        </property>
+        <property name="auUserinsert" type="java.lang.Integer">
+            <column name="au_userinsert" />
+        </property>
+        <property name="auFechaupdt" type="time">
+            <column name="au_fechaupdt" length="21" />
+        </property>
+        <property name="auUserupdt" type="java.lang.Integer">
+            <column name="au_userupdt" />
+        </property>
+        <property name="site" type="java.lang.Long">
+            <column name="site" />
+        </property>
+        <property name="year" type="java.lang.Long">
+            <column name="year" />
+        </property>
+        <property name="tipodoc" type="string">
+            <column name="tipodoc" length="3" />
+        </property>
+        <property name="documento" type="string">
+            <column name="documento" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

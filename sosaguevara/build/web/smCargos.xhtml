@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+
+            <ui:define name="content">
+                <div >
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <h:form id="formRegistrarEstudio">
+                        <p:panel id="panel" header="Registrar Estudio" style="margin-left: auto; margin-right: auto; width: 1300px; margin-bottom:10px;">
+                            <p:panel style="margin-bottom:10px;">
+
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h:outputLabel   value="Paciente: " style="font-weight: bold" />
+                                    <h:panelGrid columns="2" cellpadding="0">
+                                        <p:selectOneMenu  value="#{rxinterfaceBean.rxinterface.paciente.idPaciente}" filter="true" filterMatchMode="contains"  required="true" requiredMessage="Seleccione un paciente!"  style="width: 300px;">
+                                            <f:selectItem itemLabel="--- Seleccione ---" />
+
+                                            <f:selectItems value="#{rxinterfaceBean.listaPacientes}"/>
+                                            <p:ajax update="btnaceptar" event="change" listener="#{rxinterfaceBean.enableBtn()}" />
+                                        </p:selectOneMenu>
+                                        <p:commandButton id="nvopacBtn" icon="ui-icon-plus" oncomplete="PF('dlgregistrarpaciente').show()" immediate="true" actionListener="#{pacienteBean.inicializarPaciente(actionevent)}" update="formRegistrarPacienteWklst"/>
+                                        <p:tooltip id="tltnvopacBtn" for="nvopacBtn" value="Agregar Nuevo Paciente" />
+                                    </h:panelGrid>
+                                    <h:outputLabel value="Referente: " style="font-weight: bold"  />
+                                    <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.medicos.idmedico}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                        <f:selectItems value="#{rxinterfaceBean.listaReferentes}"/>
+                                    </p:selectOneMenu> 
+
+                                    <h:outputLabel value="Aseguradora: " style="font-weight: bold"  />
+                                    <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.aseguradoras.idaseguradora}" filter="true" filterMatchMode="contains"  style="width: 300px;">
+                                        <f:selectItems value="#{rxinterfaceBean.listaAseguradoras}"/>
+                                    </p:selectOneMenu> 
+
+                                    <h:outputLabel value="Tipo de Pago: " style="font-weight: bold"  />
+                                    <p:selectOneButton id="tpagoButton" value="#{rxinterfaceBean.rxinterface.tipopago}" style="margin-left: auto;margin-right: auto;position: relative">
+                                        <f:selectItem itemLabel="Contado" itemValue="contado" />
+                                        <f:selectItem itemLabel="Credito" itemValue="credito" />
+                                        <f:selectItem itemLabel="Mixto" itemValue="mixto" />
+                                    </p:selectOneButton>
+                                    
+                                    <h:outputLabel value="Estudio: " style="font-weight: bold"  />
+                                    <p:selectManyMenu  value="#{rxinterfaceBean.listaProyeccionesSel}"    filter="true" filterMatchMode="contains" showCheckbox="true" style="width: 300px;" >
+
+                                        <f:selectItems  value="#{rxinterfaceBean.listaProyecciones}"  var="proyecciones"  itemValue="#{proyecciones.value}" itemLabel="#{proyecciones.label}"/>
+                                    </p:selectManyMenu>
+
+
+
+                                </h:panelGrid>
+                            </p:panel>
+
+                            <h:panelGrid columns="2">
+
+                                <p:commandButton id="btnaceptar" value="ACEPTAR" disabled="#{rxinterfaceBean.switchboton}" oncomplete="PF('dlgregistrar').show()" actionListener="#{rxinterfaceBean.nuevosEstudios2()}" update="formRegistrarEstudios" />
+                                <p:commandButton  value="CANCELAR" action="mWorklist" immediate="true" actionListener="#{rxinterfaceBean.disableBtn()}"/>
+                            </h:panelGrid>
+
+                        </p:panel> 
+                    </h:form>
+
+                    <h:form id="formRegistrarEstudios">
+                        <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Lista de Estudios a Realizar: " showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200" >    
+
+                            <p:panel style="width: 600px" >
+                                <h:outputLabel   value="Paciente: " style="font-weight: bold" />
+
+                                <p:selectOneMenu  value="#{rxinterfaceBean.rxinterface.paciente.idPaciente}" filter="true" filterMatchMode="contains" required="true"  style="width: 300px; font-weight: bold" disabled="true" >
+                                    <f:selectItem itemLabel="--- Seleccione ---" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaPacientes}"/>
+                                </p:selectOneMenu>
+                                <br/>
+                                <h:outputLabel value="Referente: " style="font-weight: bold"  />
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.medicos.idmedico}" filter="true" filterMatchMode="contains" required="true" style="width: 300px; font-weight: bold" disabled="true">
+                                    <f:selectItem itemLabel="--- Seleccione ---" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaReferentes}"/>
+                                </p:selectOneMenu> 
+                                    
+                                <br/>
+                                <br/>
+
+                                <p:dataTable id="tablaWorklist" var="tablaWorklist" value="#{rxinterfaceBean.rxestudios}"
+                                             widgetVar="worklistTable" emptyMessage="Seleccione estudios a registrar!">
+
+                                    <p:column headerText="Estudio"  width="85%">
+
+                                        <p:selectOneMenu value="#{tablaWorklist.proyecciones.cpt}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                            <f:selectItem itemLabel="--- Seleccione ---" />
+                                            <f:selectItems value="#{rxinterfaceBean.listaProyecciones}"/>
+                                        </p:selectOneMenu> 
+
+                                    </p:column>
+
+                                    <p:column headerText="Cantidad" width="15%">
+                                        <p:spinner value="#{tablaWorklist.cantidad}" min="1" required="true" class="spinner"/>  
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+
+                                <p:commandButton  value="CONFIRMAR" action="mWorklist" actionListener="#{rxinterfaceBean.nuevosEstudios3()}" update="formRegistrarEstudio" />
+                                <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true" actionListener="#{rxinterfaceBean.disableBtn()}"/>   
+                            </p:panel>
+                        </p:dialog>
+                    </h:form>
+
+                    <h:form id="formRegistrarPacienteWklst">
+                        <p:dialog id="dlgregistrarpaciente" widgetVar="dlgregistrarpaciente" header="Nuevo Paciente" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 600px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="ID del Paciente *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value=" " styleClass="outputLabel" disabled="true"/> 
+                                <p:outputLabel value="DUI:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputMask value="#{pacienteBean.paciente.extid}" class="input" mask="99999999-9" size="12"/> 
+                                <p:outputLabel value="Pasaporte:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.passport}" styleClass="outputLabel" size="12"/> 
+                                <p:outputLabel value="Nombre del Paciente *:"  style="font-weight: bold;width: 50px;" />
+                                <p:inputText value="#{pacienteBean.paciente.namepatient}" styleClass="outputLabel" required="true" requiredMessage="Nombre de paciente es requerido!" size="48"/>    
+                                <p:outputLabel value="Apellido del Paciente *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.lastnamepatient}" styleClass="outputLabel" required="true" requiredMessage="Apellido de paciente es requerido!" size="48"/>  
+                                <p:outputLabel value="Genero:"  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{pacienteBean.paciente.gender}" >
+                                    <f:selectItem itemLabel="M" itemValue="M"/>
+                                    <f:selectItem itemLabel="F" itemValue="F"/>
+                                    <f:selectItem itemLabel="O" itemValue="O"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Edad *:"  style="font-weight: bold;width: 100px;"/>
+                                <p:panelGrid id="panelEdad">
+                                    <p:row>
+                                        <p:column colspan="2">
+                                            <p:selectOneButton id="dobButton" value="#{pacienteBean.option}" style="margin-left: auto;margin-right: auto;position: relative">
+                                                <f:selectItem itemLabel="Fecha" itemValue="Fecha"   />
+                                                <f:selectItem itemLabel="Edad" itemValue="Edad" />
+                                                <p:ajax update="dob years" event="change" listener="#{pacienteBean.cambioDob()}" />
+                                            </p:selectOneButton>
+                                            <p:outputLabel value=" " /> 
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:calendar id="dob" value="#{pacienteBean.paciente.datebirth}" disabled="#{!pacienteBean.switchdob}" navigator="true" maxdate="#{pacienteBean.today}" pattern="yyyy-MM-dd" yearRange="c-50:c+0"  style="width: 30px" required="true"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:spinner id="years" value="#{pacienteBean.edad}" min="0"   disabled="#{pacienteBean.switchdob}" styleClass="outputLabel"  class="spinner"  required="true"/>    
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                                <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                <p:inputMask value="#{pacienteBean.paciente.phone}" styleClass="outputLabel" mask="9999-9999" size="12"/>
+                                <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.email}" styleClass="outputLabel" size="48" />
+
+                                <p:outputLabel value="Direccion del Cliente:"  style="font-weight: bold;width: 500px;" />
+                                <p:inputTextarea value="#{pacienteBean.paciente.adress}" styleClass="outputLabel" cols="48"/>
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrarpaciente').hide()"  update="formRegistrarEstudio growl" actionListener="#{pacienteBean.nuevoPaciente()}"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrarpaciente').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form>
+
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                <h:form id="formMostrarMedicos"  title="Lista de Medicos:" >
+
+                    <p:panel   id="medicos" header="Top Ten Medicos Referentes: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                        <p:dataTable id="tablaMedicos" var="tablaMedicos" value="#{medicosBean.topMedicos}"
+                                     widgetVar="medicosTable"
+                                     emptyMessage="No hay registros disponibles para la busqueda" 
+                                     rows="15" 
+                                     reflow="true"
+                                     selectionMode="single" selection="#{medicosBean.medico}" 
+                                     rowKey="#{tablaMedicos.idmedico}"
+                                     sortBy="#{tablaMedicos.idmedico}" sortOrder="ascending"
+                                     style="max-width: 1000px;margin-left:auto;margin-right:auto;"
+                                     >
+
+                           
+                            <p:column headerText="Nombre" filterBy="#{tablaMedicos.apellidomedico}, #{tablaMedicos.nombremedico}" filterStyle="display:none" filterMatchMode="contains" width="40%">
+                                <h:outputText value="#{tablaMedicos.apellidomedico}, #{tablaMedicos.nombremedico}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Estudios Referidos"  width="10%">
+                                <h:outputText value="#{tablaMedicos.estudioagendado}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Numero Junta"  filterBy="#{tablaMedicos.juntavigilancia}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                                <h:outputText value="#{tablaMedicos.juntavigilancia}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Telefono"  width="10%">
+                                <h:outputText value="#{tablaMedicos.telefono}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Especialidad"  width="10%">
+                                <h:outputText value="#{tablaMedicos.especialidad}" style="font-size:11px;"/>
+                            </p:column>      
+                            
+                            
+                            <f:facet name="footer">
+                                <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                    <p:graphicImage value="/images/excel.png" width="18"/>
+                                    <p:dataExporter type="xls" target="tablaMedicos" fileName="medicos" />
+                                </h:commandLink>
+                                <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                            </f:facet>
+                        </p:dataTable>
+                    </p:panel> 
+
+                </h:form>
+
+                
+
+
+               
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+
+            <ui:define name="content">
+                <div >
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formRegistrarEstudio">
+                        <p:panel id="panel" header="Advertencia!" style="margin-left: auto; margin-right: auto; max-width: 1290px; margin-bottom:10px;border-color: #D20005;min-height:700px;margin-bottom:20px;">
+                            <p:panel style="margin-bottom:10px;text-align: center">
+                                ADVERTENCIA: LOS DATOS DE PACIENTE QUE ESTA INTENTANDO INGRESAR PRESENTAN COINCIDENCIAS CON OTROS REGISTROS DE PACIENTES!!!.
+                                <br/><br/>
+                                SI SELECCIONA ACEPTAR PROCEDERA A SEGUIR CON EL PROCESO DE REGISTRO DE UN NUEVO PACIENTE.
+                                <br/><br/>
+                                SI SELECCIONA REVISAR PODRA DIRIGIRSE A LA FICHA DE PACIENTES PARA REVISAR LAS COINCIDENCIAS ENCONTRADAS.
+                                <br/><br/>
+                                SELECCIONE CANCELAR SI YA NO DESEA SEGUIR CON EL REGISTRO.
+                                <br/><br/>
+                            </p:panel>
+
+                            <h:panelGrid columns="3">
+
+                                <p:commandButton value="ACEPTAR"  actionListener="#{rxinterfaceBean.nuevosEstudios4()}"  />
+                                <p:commandButton value="REVISAR"  ajax="false" action="mPacientes.xhmtl?faces-redirect=true" immediate="true"  />
+                                <p:commandButton  value="CANCELAR" ajax="false" action="mWorklist.xhmtl?faces-redirect=true" immediate="true" actionListener="#{rxinterfaceBean.disableBtn()}"/>
+                            </h:panelGrid>
+
+                        </p:panel> 
+                    </h:form>
+
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

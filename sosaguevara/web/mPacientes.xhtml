@@ -1,0 +1,336 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formMostrarPacientes"  >
+
+                        <p:panel   id="listaclientes" header="Pacientes: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:dataTable id="tablaPacientes" var="tablaPacientes" value="#{pacienteBean.pacientes}"
+                                         widgetVar="pacientesTable"
+                                         emptyMessage="No hay registros disponibles para la busqueda"
+                                         paginator="true" 
+                                         rows="15" 
+                                         reflow="true"
+                                         paginatorPosition="top"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="15,25,50"
+                                         rowIndexVar="fila"
+                                         currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                         selectionMode="single" selection="#{pacienteBean.paciente}" 
+                                         rowKey="#{tablaPacientes.idPaciente}"
+                                         sortBy="#{tablaPacientes.dateadmission}" sortOrder="descending"
+                                         >
+
+                                <f:facet name="header"  >
+                                    <p:outputPanel class="left_content"  >
+                                        <h:outputText value="Buscar "  />
+                                        <p:inputText id="globalFilter" onkeyup="PF('pacientesTable').filter()"  placeholder="ID/Nombre/Apellido"/>
+                                        <p:commandButton class="btnNuevoEstudio" value="Nuevo Paciente" icon="fa fa-floppy-o" oncomplete="PF('dlgregistrar').show()" actionListener="#{pacienteBean.inicializarPaciente(actionevent)}" update=":formRegistrarPaciente"/>
+                                    </p:outputPanel>
+                                </f:facet>
+                                <p:ajax event="rowDblselect"  oncomplete="PF('dlgficha').show()" update="formFichaPaciente" listener="#{rxinterfaceBean.clearestudioSeleccionado(pacienteBean.paciente)}" />
+                                <p:column headerText="#" width="5%">
+                                    <h:outputText value="#{fila+1}" >
+
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="ID" sortBy="dateadmission" filterBy="#{tablaPacientes.idPaciente}" filterStyle="display:none" filterMatchMode="contains" width="15%">
+                                    <h:outputText value="#{tablaPacientes.idPaciente}" style="font-weight: bold"/>
+                                </p:column>
+                                <p:column headerText="Nombre" filterBy="#{tablaPacientes.lastnamepatient} #{tablaPacientes.namepatient}" filterStyle="display:none" filterMatchMode="contains" width="35%">
+                                    <h:outputText value="#{tablaPacientes.lastnamepatient}, #{tablaPacientes.namepatient}" />
+                                </p:column>
+                                <p:column headerText="Telefono"  width="10%">
+                                    <h:outputText value="#{tablaPacientes.phone}" />
+                                </p:column>
+                                <p:column headerText="E-mail" filterBy="#{tablaPacientes.email}" filterStyle="display:none" filterMatchMode="contains" width="20%">
+                                    <h:outputText value="#{tablaPacientes.email}" />
+                                </p:column>                        
+                                <p:column headerText="Direccion" width="30%">
+                                    <h:outputText value="#{tablaPacientes.adress}"  />
+                                </p:column>
+                                <p:column width="10%" exportable="false">
+                                    <p:commandButton id="estudioBtn" icon="ui-icon-extlink" ajax="false" action="smCargo.xhmtl?faces-redirect=true" actionListener="#{rxinterfaceBean.limpiarinterface()}" >
+                                        <f:setPropertyActionListener value="#{tablaPacientes}" target="#{rxinterfaceBean.pacienteBean.paciente}"  />
+                                    </p:commandButton>
+                                    <p:tooltip id="tltestudioBtn" for="estudioBtn" value="Agregar Estudio" />
+                                    <p:commandButton id="editarpacBtn" icon="ui-icon-pencil" update="formModificarPaciente" oncomplete="PF('dlgmodificar').show()" >
+                                        <f:setPropertyActionListener value="#{tablaPacientes}" target="#{pacienteBean.paciente}" />
+                                    </p:commandButton>
+                                    <p:tooltip id="tlteditarpacBtn" for="editarpacBtn" value="Modificar Datos de Paciente" />
+                                </p:column>
+
+                                <f:facet name="footer">
+                                    <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                        <p:graphicImage value="/images/excel.png" width="18"/>
+                                        <p:dataExporter type="xls" target="tablaPacientes" fileName="pacientes" />
+                                    </h:commandLink>
+                                    <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                                </f:facet>
+
+                            </p:dataTable>
+
+
+                        </p:panel>   
+
+                    </h:form>
+
+                    <h:form id="formRegistrarPaciente">
+                        <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Nuevo Paciente" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid id="registrarGrid" columns="2" columnClasses="label, value"  style="width: 600px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="ID del Paciente *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value=" " styleClass="outputLabel" disabled="true"/> 
+                                <p:outputLabel value="DUI:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputMask value="#{pacienteBean.paciente.extid}" class="input" mask="99999999-9" size="12"/> 
+                                <p:outputLabel value="Pasaporte:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.passport}" styleClass="outputLabel" size="12"/> 
+                                <p:outputLabel value="Nombre del Paciente *:"  style="font-weight: bold;width: 50px;" />
+                                <p:inputText value="#{pacienteBean.paciente.namepatient}" styleClass="outputLabel" required="true" requiredMessage="Nombre de paciente es requerido!" size="48"/>    
+                                <p:outputLabel value="Apellido del Paciente *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.lastnamepatient}" styleClass="outputLabel" required="true" requiredMessage="Apellido de paciente es requerido!" size="48"/>  
+                                <p:outputLabel value="Genero:"  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{pacienteBean.paciente.gender}" >
+                                    <f:selectItem itemLabel="M" itemValue="M"/>
+                                    <f:selectItem itemLabel="F" itemValue="F"/>
+                                    <f:selectItem itemLabel="O" itemValue="O"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Edad *:"  style="font-weight: bold;width: 100px;"/>
+                                <p:panelGrid id="panelEdad">
+                                    <p:row>
+                                        <p:column colspan="2">
+                                            <p:selectOneButton id="dobButton" value="#{pacienteBean.option}" style="margin-left: auto;margin-right: auto;position: relative">
+                                                <f:selectItem itemLabel="Fecha" itemValue="Fecha"   />
+                                                <f:selectItem itemLabel="Edad" itemValue="Edad" />
+                                                <p:ajax update="dob years" event="change" listener="#{pacienteBean.cambioDob()}" />
+                                            </p:selectOneButton>
+                                            <p:outputLabel value=" " /> 
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:calendar id="dob" value="#{pacienteBean.paciente.datebirth}" disabled="#{!pacienteBean.switchdob}" navigator="true" maxdate="#{pacienteBean.today}" autocomplete="off" pattern="dd-MM-yyyy" mask="true" yearRange="c-100:c+0"  style="width: 30px" required="true"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:spinner id="years" value="#{pacienteBean.edad}" min="0"   disabled="#{pacienteBean.switchdob}" styleClass="outputLabel"  class="spinner"  required="true"/>    
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                                <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                <p:inputMask value="#{pacienteBean.paciente.phone}" styleClass="outputLabel" mask="9999-9999" size="12"/>
+                                <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.email}" styleClass="outputLabel" size="48" />
+
+                                <p:outputLabel value="Direccion del Cliente:"  style="font-weight: bold;width: 500px;" />
+                                <p:inputTextarea value="#{pacienteBean.paciente.adress}" styleClass="outputLabel" cols="48"/>
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrar').hide()"  update=":formMostrarPacientes growl" actionListener="#{pacienteBean.nuevoPaciente()}"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true"/>
+                            <p:commandButton  value="LEER" update="formRegistrarPaciente:registrarGrid" immediate="true"/>
+                        </p:dialog>
+                    </h:form>
+
+                    <h:form id="formModificarPaciente">
+                        <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Editar Paciente" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="ID del Paciente *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.idPaciente}" styleClass="outputLabel" disabled="true"/> 
+                                <p:outputLabel value="DUI:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputMask value="#{pacienteBean.paciente.extid}" mask="99999999-9" styleClass="outputLabel"/> 
+                                <p:outputLabel value="Pasaporte:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.passport}" styleClass="outputLabel"/> 
+                                <p:outputLabel value="Nombre del Paciente *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.namepatient}" styleClass="outputLabel" required="true" requiredMessage="Nombre de paciente es requerido!"/>    
+                                <p:outputLabel value="Apellido del Paciente *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.lastnamepatient}" styleClass="outputLabel" required="true" requiredMessage="Apellido de paciente es requerido!"/>  
+                                <p:outputLabel value="Genero:"  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{pacienteBean.paciente.gender}" >
+                                    <f:selectItem itemLabel="M" itemValue="M"/>
+                                    <f:selectItem itemLabel="F" itemValue="F"/>
+                                    <f:selectItem itemLabel="O" itemValue="O"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Edad *:"  style="font-weight: bold;width: 50px;"/>
+                                <p:panelGrid id="panelEdad">
+                                    <p:row>
+                                        <p:column colspan="2">
+                                            <p:selectOneButton id="dobButton" value="#{pacienteBean.option}" style="margin-left: auto;margin-right: auto;position: relative">
+                                                <f:selectItem itemLabel="Fecha" itemValue="Fecha"   />
+                                                <f:selectItem itemLabel="Edad" itemValue="Edad" />
+                                                <p:ajax update="dob years" event="change" listener="#{pacienteBean.cambioDob()}" />
+                                            </p:selectOneButton>
+                                            <p:outputLabel value=" " /> 
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:calendar id="dob" value="#{pacienteBean.paciente.datebirth}" disabled="#{!pacienteBean.switchdob}" navigator="true" autocomplete="off" pattern="dd-MM-yyyy" mask="true" yearRange="c-100:c+0"  style="width: 30px" required="true"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:spinner id="years" value="#{pacienteBean.edad}" min="0"   disabled="#{pacienteBean.switchdob}" styleClass="outputLabel"   required="true"/>    
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                                <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                <p:inputMask value="#{pacienteBean.paciente.phone}" styleClass="outputLabel" mask="9999-9999"/>
+                                <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{pacienteBean.paciente.email}" styleClass="outputLabel" />
+
+                                <p:outputLabel value="Direccion del Cliente:"  style="font-weight: bold;width: 50px;"/>
+                                <p:inputTextarea value="#{pacienteBean.paciente.adress}" styleClass="outputLabel"/>
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarPacientes growl" actionListener="#{pacienteBean.modificarPaciente()}"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form>
+
+                    <h:form id="formFichaPaciente">
+                        <p:dialog id="dlgficha" widgetVar="dlgficha" header="Expediente del Paciente" showEffect="explode" hideEffect="explode"  modal="true"  width="1200" height="600">    
+                            <div >
+
+                                <p:panelGrid id="fichapaciente" columns="3" columnClasses="twenty-percent, twenty-percent, sixty-percent" style="width: 1100px;margin: auto" >
+                                    <p:panelGrid columns="2" style="width: 250px" >
+                                        <p:outputLabel value="ID del Paciente:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.idPaciente}" styleClass="outputLabel" /> 
+                                        <p:outputLabel value="DUI:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.extid}"  styleClass="outputLabel"/> 
+                                        <p:outputLabel value="Pasaporte:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.passport}" styleClass="outputLabel"/> 
+                                        <p:outputLabel value="Nombre del Paciente:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.namepatient}" styleClass="outputLabel"  />    
+                                        <p:outputLabel value="Apellido del Paciente:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.lastnamepatient}" styleClass="outputLabel"  />  
+                                        <p:outputLabel value="Genero:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.gender}" />
+
+                                        <p:outputLabel value="Edad:"  style="font-weight: bold;width: 50px;"/>
+
+                                        <p:outputLabel id="panelEdad" value="#{rxinterfaceBean.pacienteBean.paciente.datebirth}"/>
+                                        <p:outputLabel value="Telefono:" style="font-weight: bold;width: 50px;" />
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.phone}" styleClass="outputLabel" />
+                                        <p:outputLabel value="Correo:"  style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel value="#{rxinterfaceBean.pacienteBean.paciente.email}" styleClass="outputLabel" />
+
+                                        <p:outputLabel value="Direccion del Cliente:"   style="font-weight: bold;width: 50px;"/>
+                                        <p:outputLabel  value="#{rxinterfaceBean.pacienteBean.paciente.adress}" styleClass="outputLabel" style="height: 200px"/>
+
+                                    </p:panelGrid>
+
+                                    <p:panelGrid columns="2" style="width: 250px">
+                                        <h:outputLabel value="Numero de Acceso: " style="font-weight: bold"  />
+                                        <h:outputLabel value="#{rxinterfaceBean.rxinterface.accnumber}" /> 
+                                        <h:outputLabel value="Estudio: " style="font-weight: bold"  />
+                                        <h:outputLabel value="#{rxinterfaceBean.rxinterface.proyecciones.proc}" /> 
+                                        <h:outputLabel value="Radiologo: " style="font-weight: bold"  />
+                                        <h:outputLabel value="#{rxinterfaceBean.rxinterface.usuarios.firstnameuser} #{rxinterfaceBean.rxinterface.usuarios.lastnameuser}" /> 
+                                        <h:outputLabel value="Referente: " style="font-weight: bold"  />
+                                        <h:outputLabel value="#{rxinterfaceBean.rxinterface.medicos.nombremedico} #{rxinterfaceBean.rxinterface.medicos.apellidomedico}" /> 
+                                        <h:outputLabel value="Institución: " style="font-weight: bold"  />
+                                        <h:outputLabel value="#{rxinterfaceBean.rxinterface.institucion}" /> 
+                                        <h:outputLabel value="Aseguradora: " style="font-weight: bold"  />
+                                        <h:outputLabel value="#{rxinterfaceBean.rxinterface.aseguradoras.aseguradora}" style="font-weight: bold"  />
+                                        <h:outputLabel value="Tipo de Pago: " style="font-weight: bold"  />
+                                        <h:outputLabel value="#{rxinterfaceBean.rxinterface.tipopago}"  style="font-weight: bold"  />
+                                    </p:panelGrid>
+
+                                    <p:panelGrid columns="1" style="width: 600px">
+                                        <h:outputLabel value="Reporte: " style="font-weight: bold;width: 200px"  />
+                                        <h:outputText value="#{rxinterfaceBean.rxinterface.report}"  escape="false" style="width: auto;height: 300px;display: block;overflow: auto"/> 
+                                    </p:panelGrid>
+
+                                </p:panelGrid>                                    
+
+                                <p:dataTable id="tablaestpac" var="tablaestpac" value="#{rxinterfaceBean.getRxficha(rxinterfaceBean.pacienteBean.paciente.idPaciente)}"
+                                             widgetVar="estpacTable"
+                                             rowIndexVar="fila"
+                                             
+                                             emptyMessage="No hay registros disponibles para la busqueda"
+                                             selectionMode="single" selection="#{rxinterfaceBean.rxinterface}" 
+                                             rowKey="#{tablaestpac.accnumber}"
+                                             sortBy="#{tablaestpac.datestudy}" sortOrder="descending"
+                                             style="width: 1170px;margin: auto"
+                                             >
+
+
+                                    <p:ajax event="rowSelect" listener="#{rxinterfaceBean.estudioSeleccionado(rxinterfaceBean.rxinterface)}" update=":formFichaPaciente:fichapaciente"  />
+
+
+                                    <p:column headerText="#" width="5%">
+                                        <h:outputText value="#{fila+1}" >
+
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="AccNum" filterBy="#{tablaestpac.accnumber}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                                        <h:outputText value="1.#{tablaestpac.accnumber}.18" />
+                                    </p:column>
+                                    <p:column headerText="Nombre Paciente" filterBy="#{tablaestpac.paciente.lastnamepatient} #{tablaestpac.paciente.namepatient}" filterStyle="display:none" filterMatchMode="contains" width="30%">
+                                        <h:outputText value="#{tablaestpac.paciente.lastnamepatient}, #{tablaestpac.paciente.namepatient}" />
+                                    </p:column>
+
+                                    <p:column headerText="Edad:" width="15%">
+                                        <h:outputText value="#{rxinterfaceBean.edad(tablaestpac.paciente.datebirth)}" />
+                                    </p:column>
+
+
+                                    <p:column headerText="Estudio"  width="25%">
+                                        <h:outputText value="#{tablaestpac.proyecciones.proc}" />
+                                    </p:column>
+                                    <p:column headerText="Modalidad"  width="9%">
+                                        <h:outputText value="#{tablaestpac.proyecciones.modality}" />
+                                    </p:column>
+
+
+                                    <p:column headerText="Fecha/Hora" width="15%">
+                                        <h:outputText value="#{tablaestpac.date}/#{tablaestpac.timestudy}" >
+
+                                        </h:outputText>     
+                                    </p:column>
+                                    
+                                    <p:column headerText="Imprimir" width="5%"  >
+                                        <h:commandLink  style="padding: .3em 1em;" actionListener="#{rxinterfaceBean.verReporte()}" target="_blank">
+                                    <p:commandButton id="impresionBtn" ajax="false" icon="fa fa-print"  >
+                                        <f:setPropertyActionListener value="#{tablaestpac}" target="#{tablaestpac.accnumber}" />
+                                    </p:commandButton>
+                                    <p:tooltip id="tltimpresionBtn" for="impresionBtn" value="Impresion de Informe" />
+
+                                    
+                                    </h:commandLink>
+
+                                </p:column>
+
+                                    <f:facet name="footer" >
+                                        <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                            <p:graphicImage value="/images/excel.png" width="18" />
+                                            <p:dataExporter type="xls" target="tablaestpac" fileName="informes" />
+                                        </h:commandLink>
+                                        <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" position="right" />
+                                    </f:facet>
+
+                                </p:dataTable>
+
+                            </div>
+                        </p:dialog>
+                    </h:form>
+
+
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+
+
+</html>

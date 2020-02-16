@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <div>
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="3000" />
+                    <h:form id="formMostrarWorklist"  title="Estudios Agendados:" >
+
+                        <p:panel   id="worklist" header="Worklist: " style="margin-left: auto; margin-right: auto; width: 1300px; background-color:  white">
+                            <p:dataTable id="tablaWorklist" var="tablaWorklist" value="#{rxinterfaceBean.rxinterfaces}"
+                                         widgetVar="worklistTable"
+                                         emptyMessage="No hay registros disponibles para la busqueda"
+                                         paginator="true" 
+                                         rows="10" 
+                                         paginatorPosition="top"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="10,20,50"
+                                         currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                         selectionMode="single" selection="#{rxinterfaceBean.rxinterface}" 
+                                         rowKey="#{tablaWorklist.accnumber}"
+                                         sortBy="#{tablaWorklist.datestudy}" sortOrder="descending"
+                                         >
+
+                                <f:facet name="header"  >
+                                    <p:outputPanel class="left_content"  >
+                                        <h:outputText value="Buscar: "  />
+                                        <p:inputText id="globalFilter" onkeyup="PF('worklistTable').filter()"  placeholder="AccNum/Nombre/Apellido"/>
+                                        <p:outputLabel value="Fecha: "  style="margin-left: 775px;padding-bottom: 10px"/>
+                                        <p:calendar maxdate="#{rxinterfaceBean.today}"  id="fechaworklist" value="#{rxinterfaceBean.workdate}" widgetVar="fechaworklist"  navigator="true" pattern="dd-MMM-yyyy">
+                                            <p:ajax event="dateSelect" update="tablaWorklist"  listener="#{rxinterfaceBean.actualizarWorklist()}"/>
+                                        </p:calendar>
+                                        <p:commandButton icon="fa fa-refresh" update="tablaWorklist"  action="#{rxinterfaceBean.initWorklist()}" >
+                                           <!-- <p:ajax event="click" update="tablaWorklist"  listener="#{rxinterfaceBean.actualizarWorklist()}"/>-->
+                                        </p:commandButton>
+
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="AccNum" filterBy="#{tablaWorklist.accnumber}" filterStyle="display:none" filterMatchMode="contains" width="5%">
+                                    <h:outputText value="#{tablaWorklist.accnumber}" style="font-size:11px;font-weight: bold"/>
+                                </p:column>
+                                <p:column headerText="Nombre Paciente" filterBy="#{tablaWorklist.paciente.lastnamepatient} #{tablaWorklist.paciente.namepatient}" filterStyle="display:none" filterMatchMode="contains" width="30%">
+                                    <h:outputText value="#{tablaWorklist.paciente.lastnamepatient}, #{tablaWorklist.paciente.namepatient}" style="font-size:11px;"/>
+                                </p:column>
+                                <p:column headerText="Estudio"  width="25%">
+                                    <h:outputText value="#{tablaWorklist.proyecciones.proc}" style="font-size:11px;"/>
+                                </p:column>
+                                <p:column headerText="Estatus"  width="5%">
+                                    <h:outputText value="#{tablaWorklist.status}" style="font-size:11px;"/>
+                                </p:column>                        
+                                <p:column headerText="Referente" width="30%">
+                                    <h:outputText value="#{tablaWorklist.medicos.apellidomedico}, #{tablaWorklist.medicos.nombremedico}" style="font-size:11px;" />
+                                </p:column>
+                                <p:column headerText="Fecha" width="15%">
+                                    <h:outputText value="#{tablaWorklist.datestudy}" style="font-size:11px;" />
+                                </p:column>
+                            </p:dataTable>
+                            <p:contextMenu for="tablaWorklist">
+                                <p:menuitem value="Modificar" icon="ui-icon-pencil" />
+                                <p:menuitem value="Cancelar" icon="ui-icon-close" update=":formMostrarWorklist:tablaWorklist growl" actionListener="#{rxinterfaceBean.cancelarEstudio()}">
+                                    <p:confirm header="Confirmación" message="Esta seguro que desea Cancelar el Estudio?" icon="ui-icon-alert" />
+                                </p:menuitem>
+                            </p:contextMenu>
+                            <p:confirmDialog  id="confirmacion" global="true" showEffect="fade" hideEffect="fade" >
+                                <p:commandButton value="SI" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                            <p:poll interval="5" listener="#{rxinterfaceBean.pollWorklist()}" update="tablaWorklist" />
+                            <p:commandButton  value="Nuevo Estudio" icon="ui-icon-disk" oncomplete="PF('dlgregestudio').show()" actionListener="#{rxinterfaceBean.inicializarEstudio(actionevent)}" update="formRegistrarEstudio"/>
+                        </p:panel>     
+                    </h:form> 
+                    <h:form id="formRegistrarEstudio">
+                        <p:dialog id="dlgregestudio" widgetVar="dlgregestudio" header="Nuevo Estudio" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" minWidth="200">    
+                            <p:separator/>
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="SELECCIONE PACIENTE:"  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.paciente.idPaciente}" filter="true" filterMatchMode="contains">
+                                    <f:selectItem itemLabel="--- Seleccione ---" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaPacientes}"/>
+                                </p:selectOneMenu>
+
+                            </p:panelGrid>
+                            <p:separator/>
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="SELECCIONE ESTUDIO:"  style="font-weight: bold;width: 50px;"/>
+
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.proyecciones.cpt}" filter="true" filterMatchMode="contains">
+                                    <f:selectItem itemLabel="--- Seleccione ---" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaProyecciones}"/>
+                                </p:selectOneMenu>
+                                
+                            </p:panelGrid>
+                            <p:separator/>
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="width: 800px;position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+                                <p:outputLabel value="SELECCIONE REFERENTE:"  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.medicos.idmedico}" filter="true" filterMatchMode="contains">
+                                    <f:selectItem itemLabel="--- Seleccione ---" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaMedicos}"/>
+
+                                </p:selectOneMenu> 
+
+                            </p:panelGrid>
+                            <p:separator/>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregestudio').hide()"  update=":formMostrarWorklist:tablaWorklist growl" actionListener="#{rxinterfaceBean.nuevoEstudio()}" action="#{rxinterfaceBean.initWorklist()}">
+                            </p:commandButton>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgregestudio').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form>
+
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

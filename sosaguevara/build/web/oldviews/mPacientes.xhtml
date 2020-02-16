@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <h:form id="formMostrar">
+
+                    <p:dataTable var="tablaPaciente" value="#{pacienteBean.pacientes}"
+                                 widgetVar="pacienteTable"
+                                 emptyMessage="No hay registros disponibles para la busqueda"
+                                 paginator="true" 
+                                 rows="10" 
+                                 paginatorPosition="top"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,20"
+                                 currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                 selectionMode="single" selection="#{pacienteBean.paciente}" 
+                                 rowKey="#{tablaPaciente.idPaciente}"
+                                 sortBy="#{tablaPaciente.dateadmission}" sortOrder="descending"
+                                 >
+                        <f:facet name="header">
+                            <p:outputPanel  class="center_content">
+                                <h:outputText value="Buscar: "  />
+                                <p:inputText id="globalFilter" onkeyup="PF('pacienteTable').filter()" style="width:150px" placeholder="ID o nombre"/>
+
+                                <p:commandButton   icon="fa fa-plus" oncomplete="gopaciente(xhr, status, args)" style="margin-left: 1040px;"/>
+
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="ID Paciente" filterBy="#{tablaPaciente.idPaciente}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                            <h:outputText value="#{tablaPaciente.idPaciente}" />
+                        </p:column>
+                        <p:column headerText="Paciente" filterBy="#{tablaPaciente.namepatient}  #{tablaPaciente.lastnamepatient}" filterStyle="display:none" width="30%">
+                            <h:outputText value="#{tablaPaciente.namepatient}  #{tablaPaciente.lastnamepatient}" />
+                        </p:column>
+                        <p:column headerText="Edad" width="7%">
+                            <h:outputText value="#{pacienteBean.mostraredad(tablaPaciente)}" />
+                        </p:column>
+                        <p:column headerText="e-mail">
+                            <h:outputText value="#{tablaPaciente.email}" />
+                        </p:column>
+                        <p:column headerText="Telefono" width="7%">
+                            <h:outputText value="#{tablaPaciente.phone}" />
+                        </p:column>
+                        <p:column headerText="Fecha Admision" sortBy="#{tablaPaciente.dateadmission}" width="10%">
+                            <h:outputText value="#{tablaPaciente.dateadmission}" />
+                        </p:column>
+
+                        <p:column headerText="Acciones" width="10%"  >
+                            <p:commandButton  icon="ui-icon-pencil"  oncomplete="PF('dlgeditar').show()" update=":formActualizar" >
+                                <f:setPropertyActionListener target="#{pacienteBean.paciente}" value="#{tablaPaciente}" />
+                            </p:commandButton>
+                            <p:commandButton  icon="ui-icon-clipboard"  action="#{pacienteBean.parameterPaciente(tablaPaciente)}" oncomplete="gocargo(xhr, status, args)" >
+                            </p:commandButton>
+                        </p:column>
+
+
+                    </p:dataTable>
+                </h:form>
+
+                <p:dialog id="dlgActualizar" header="Editar Paciente" showEffect="explode" hideEffect="explode" widgetVar="dlgeditar" modal="true" resizable="false" minWidth="200">    
+                    <h:form id="formActualizar">
+
+                        <p:panelGrid columns="4">   
+
+                            <p:outputLabel value="ID del Paciente *"  />
+                            <p:inputText value="#{pacienteBean.paciente.idPaciente}" required="true" readonly="true"/> 
+
+                            <p:outputLabel value=" "  />
+                            <p:outputLabel value=" "  />
+
+                            <p:outputLabel value="Nombre del Paciente *"  />
+                            <p:inputText value="#{pacienteBean.paciente.namepatient}" required="true"/>              
+
+                            <p:outputLabel value="Apellido del Paciente *"/>
+                            <p:inputText value="#{pacienteBean.paciente.lastnamepatient}" required="true"/>
+
+                            <p:outputLabel value="Genero *"/>
+                            <p:selectOneMenu  value="#{pacienteBean.paciente.gender}" style="width:125px">
+                                <f:selectItem itemLabel="M" itemValue="M" />
+                                <f:selectItem itemLabel="F" itemValue="F" />
+                                <f:selectItem itemLabel="O" itemValue="O" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Fecha de Nacimiento"/>
+                            <p:calendar id="dob" value="#{pacienteBean.paciente.datebirth}" showOn="button" navigator="true" pattern="dd-MMM-yyyy" yearRange="-50:+50"/>
+
+                            <p:outputLabel value="e-mail" />
+                            <p:inputText value="#{pacienteBean.paciente.email}" />
+
+                            <p:outputLabel value="Telefono"/>
+                            <p:inputText value="#{pacienteBean.paciente.phone}"/>
+
+
+                            <p:outputLabel value="ID Nacional (DUI)"/>
+                            <p:inputMask value="#{pacienteBean.paciente.extid}" mask="99999999-9"/>
+
+                            <p:outputLabel value="Direccion"/>
+                            <p:inputText value="#{pacienteBean.paciente.adress}"/>
+
+                            <p:outputLabel value="Pasaporte"/>
+                            <p:inputText value="#{pacienteBean.paciente.passport}"/>                   
+
+                        </p:panelGrid>
+
+                        <p:commandButton actionListener="#{pacienteBean.modificar()}" value="MODIFICAR" oncomplete="gopacientes(xhr, status, args)"/>
+                        <p:commandButton actionListener="#{pacienteBean.modificarID()}" value="CAMBIAR ID"  oncomplete="gopacientes(xhr, status, args)"/>
+                        <p:commandButton value="CANCELAR" onclick="PF('dlgeditar').hide()" update=":formMostrar"/>
+
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+
+
+</html>

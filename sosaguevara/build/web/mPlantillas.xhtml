@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                <h:form id="formMostrarPlantillas"   >
+
+                    <p:panel   id="plantillas" header="Plantillas: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                        <p:dataTable id="tablaPlantillas" var="tablaPlantillas" value="#{plantillasBean.plantillas}"
+                                     widgetVar="plantillasTable"
+                                     emptyMessage="No hay registros disponibles para la busqueda"
+                                     paginator="true" 
+                                     rows="25" 
+                                     reflow="true"
+                                     paginatorPosition="top"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="15,25,50"
+                                     currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                     selectionMode="single" selection="#{plantillasBean.plantilla}" 
+                                     rowKey="#{tablaPlantillas.idplantilla}"
+                                     sortBy="#{tablaPlantillas.idplantilla}" sortOrder="ascending"
+                                     style="max-width: 1000px;margin-left:auto;margin-right:auto;"
+                                     >
+
+                            <f:facet name="header"  >
+                                <p:outputPanel class="left_content"  >
+                                    <h:outputText value="Buscar "  />
+                                    <p:inputText id="globalFilter" onkeyup="PF('plantillasTable').filter()"  placeholder="Nombre"/>
+                                    <p:commandButton  value="Nueva Plantilla" style="float: right" icon="fa fa-floppy-o" oncomplete="PF('dlgregistrar').show()"  update=":formRegistrarPlantilla" actionListener="#{plantillasBean.inicializarPlantilla(actionevent)}" />
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column headerText="Codigo" width="3%" sortBy="idplantilla" filterBy="#{tablaPlantillas.idplantilla}" filterStyle="display:none" filterMatchMode="contains" >
+                                <h:outputText value="#{tablaPlantillas.idplantilla}" style="font-size:11px;font-weight: bold"/>
+                            </p:column>
+                            <p:column headerText="Nombre" width="30%" filterBy="#{tablaPlantillas.nombre}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{tablaPlantillas.nombre}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Plantilla" width="45%" >
+                                <h:outputText escape="false" value="#{plantillasBean.obtenerResumen(tablaPlantillas.plantilla)}" style="font-size:11px;"/>
+                            </p:column>
+                            
+                            <p:column headerText="Modalidad" width="7%" >
+                                <h:outputText escape="false" value="#{tablaPlantillas.modalidad}" style="font-size:11px;"/>
+                            </p:column>
+                            
+                            <p:column headerText="Propietario" width="15%" >
+                                <h:outputText escape="false" value="#{tablaPlantillas.iduser}" style="font-size:11px;"/>
+                            </p:column>
+
+
+                            <p:column exportable="false" width="10%" >
+                                <p:commandButton id="editarProBtn" icon="ui-icon-pencil" update="formModificarPlantilla" oncomplete="PF('dlgmodificar').show()">
+                                    <f:setPropertyActionListener value="#{tablaPlantillas}" target="#{plantillasBean.plantilla}" />
+                                </p:commandButton>
+                                <p:tooltip id="tlteditarProBtn" for="editarProBtn" value="Modificar Registro" />
+
+                                <p:commandButton id="borrarBtn" icon="ui-icon-trash" update="formMostrarPlantillas" action="#{plantillasBean.eliminarPlantilla()}" >
+                                    <f:setPropertyActionListener value="#{tablaPlantillas}" target="#{plantillasBean.plantilla}" />
+                                    <p:confirm header="Advertencia" message="Esta seguro que desea eliminar la plantilla?" icon="fa fa-exclamation-triangle" />
+                                </p:commandButton>
+                                <p:tooltip id="tltborrarProBtn" for="borrarBtn" value="Eliminar Registro" />
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                                </p:confirmDialog>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                    <p:graphicImage value="/images/excel.png" width="18"/>
+                                    <p:dataExporter type="xls" target="tablaPlantillas" fileName="plantillas" />
+                                </h:commandLink>
+                                <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                            </f:facet>
+
+
+                        </p:dataTable>
+
+                    </p:panel>     
+ 
+                </h:form>
+
+                <h:form id="formRegistrarPlantilla">
+                    <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Nueva Plantilla" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" width="700px">    
+                        <h:panelGrid columns="2" columnClasses="label, value"  style="position:relative;margin-left: auto; margin-right: auto;" >
+
+                            <p:outputLabel value="Nombre:  "  style="font-weight: bold;width: 100px;"/>
+                            <p:inputText value="#{plantillasBean.plantilla.nombre}" styleClass="outputLabel" size="50" required="true" requiredMessage="Debe ingresar nombre!"/> 
+                            <p:outputLabel value="Plantilla:  "  style="font-weight: bold;width: 100px;"/>
+
+                            <p:textEditor   widgetVar="editor"  id="editor" value="#{plantillasBean.plantilla.plantilla}"  style="width: 100%;height: 80%;margin-left: auto;margin-right: auto;" >
+                                <f:facet name="toolbar">
+                                    <span class="ql-formats">
+                                    </span>
+                                </f:facet>
+                            </p:textEditor>
+                            <p:outputLabel value="Modalidad: "  style="font-weight: bold;width: 50px;"/>
+                            <p:selectOneMenu value="#{plantillasBean.plantilla.modalidad}" >
+                                    <f:selectItem itemLabel="CR" itemValue="CR"/>
+                                    <f:selectItem itemLabel="DX" itemValue="DX"/>
+                                    <f:selectItem itemLabel="MG" itemValue="MG"/>
+                                    <f:selectItem itemLabel="RF" itemValue="RF"/>
+                                    <f:selectItem itemLabel="CT" itemValue="CT"/>
+                                    <f:selectItem itemLabel="MR" itemValue="MR"/>
+                                    <f:selectItem itemLabel="XA" itemValue="XA"/>
+                                    <f:selectItem itemLabel="US" itemValue="US"/>
+                                </p:selectOneMenu>    
+
+
+                        </h:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrar').hide()"  update="formMostrarPlantillas growl" actionListener="#{plantillasBean.insertarPlantilla()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form> 
+
+
+                <h:form id="formModificarPlantilla">
+                    <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Editar Plantilla" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" width="600px">    
+                        <p:panelGrid columns="2" columnClasses="label, value"  style="position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                            <p:outputLabel value="Nombre:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{plantillasBean.plantilla.nombre}" styleClass="outputLabel" size="50" required="true" requiredMessage="Debe ingresar nombre!"/> 
+                            <p:outputLabel value="Plantilla:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:textEditor   widgetVar="editor"  id="editor" value="#{plantillasBean.plantilla.plantilla}"  style="width: 100%;height: 80%;margin-left: auto;margin-right: auto;" >
+                                <f:facet name="toolbar">
+                                    <span class="ql-formats">
+                                    </span>
+                                </f:facet>
+                            </p:textEditor>                            
+                            <p:outputLabel value="Modalidad: "  style="font-weight: bold;width: 50px;"/>
+                            <p:selectOneMenu value="#{plantillasBean.plantilla.modalidad}" >
+                                    <f:selectItem itemLabel="CR" itemValue="CR"/>
+                                    <f:selectItem itemLabel="DX" itemValue="DX"/>
+                                    <f:selectItem itemLabel="MG" itemValue="MG"/>
+                                    <f:selectItem itemLabel="RF" itemValue="RF"/>
+                                    <f:selectItem itemLabel="CT" itemValue="CT"/>
+                                    <f:selectItem itemLabel="MR" itemValue="MR"/>
+                                    <f:selectItem itemLabel="XA" itemValue="XA"/>
+                                    <f:selectItem itemLabel="US" itemValue="US"/>
+                                </p:selectOneMenu>    
+                        </p:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarPlantillas growl" actionListener="#{plantillasBean.modificarPlantilla()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form>
+
+
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

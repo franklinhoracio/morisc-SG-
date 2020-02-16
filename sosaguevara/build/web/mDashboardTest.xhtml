@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <p:growl id="growl"  showDetail="true" life="3000" />
+
+                <p:tabView>
+                    <p:tab title="Dashboard">
+                        <h:form id="dashboard"  title="Reporte Diario:"  >
+                            <p:panel   id="reportes"  header="Dashboard:"  style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                                <p:toolbar style="background-color:  #ffffff; ">
+                                    <f:facet name="left">
+                                        <p:outputLabel value="Fecha: " style="color: black"/>
+                                        <p:calendar    id="fechaworklist" maxdate="#{dashboardBean.today}" value="#{dashboardBean.workdate}" widgetVar="fechaworklist"  navigator="true" pattern="dd-MM-yyyy" style="margin-left: 1px;">
+                                            <p:ajax event="dateSelect" update="dashboard" listener="#{dashboardBean.createDonutModels()}" />
+                                        </p:calendar>
+                                    </f:facet>
+                                </p:toolbar>
+                                <div id="clock">
+                                    <p> <span id="weeks">#{dashboardBean.estudiosDia(dashboardBean.workdate)}</span> Estudios(Diarios) </p>
+                                    <div class="space"> </div>
+
+                                    <p> <span id="daysLeft">#{dashboardBean.pacientesDia(dashboardBean.workdate)}</span> Pacientes(Diarios) </p>
+                                    <div class="space"> </div>
+
+                                    <p> <span id="hours" class="total">#{dashboardBean.estudiosTotal()}</span> Estudios(Totales) </p>
+                                    <div class="space"> </div>
+
+                                    <p> <span id="minutes" class="total">#{dashboardBean.pacientesTotal()}</span> Pacientes(Totales) </p>
+                                    <div class="space"> </div>
+
+                                    <p> <span id="seconds" class="total">#{dashboardBean.referentesTotal()}</span> Referentes </p>
+                                </div>
+                                <p:separator />
+                                <div class="ui-g" style="margin-top: 20px;">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:chart id="chart1" type="donut" model="#{dashboardBean.donutModel1}" style="width:360px;height:300px"  />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:chart id="chart2" type="donut" model="#{dashboardBean.donutModel2}" style="width:360px;height:300px"  />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:chart id="chart3" type="donut" model="#{dashboardBean.donutModel3}" style="width:360px;height:300px"  />
+                                    </div>
+                                </div>
+                            </p:panel>
+                        </h:form>
+                    </p:tab>
+
+
+                    <p:tab title="Distribucion de Pacientes">
+                        <h:form id="dashboardpacientes"  title="Reporte Diario:"  >
+                            <p:panel   id="reportes"  header="Distribucion de Pacientes:"  style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                                <p:toolbar style="background-color:  #ffffff; ">
+                                    <f:facet name="left">
+                                        <p:outputLabel value="Fecha: " style="color: black"/>
+                                        <p:calendar    id="fechaworklist" maxdate="#{chartViewBar.today}" value="#{chartViewBar.workdate}" widgetVar="fechaworklist"  navigator="true" pattern="dd-MM-yyyy" style="margin-left: 1px;">
+                                            <p:ajax event="dateSelect" update="dashboardpacientes" listener="#{chartViewBar.createBarModels()}" />
+                                        </p:calendar>
+                                    </f:facet>
+                                </p:toolbar>
+                                <div class="ui-g" style="margin-top: 20px;">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:chart type="bar" model="#{chartViewBar.cantidadModalidades}" style="width:360px;height:300px"/>   
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:chart type="bar" model="#{chartViewBar.horizontalAseguradoras}" style="width:360px;height:300px"/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:chart type="bar" model="#{chartViewBar.barModel}" style="width:360px;height:300px"/>
+                                    </div>
+                                </div>
+                            </p:panel>
+
+                        </h:form>
+                    </p:tab>
+
+
+                </p:tabView>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

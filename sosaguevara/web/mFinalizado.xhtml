@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+
+                    <p:growl id="growl"  showDetail="true" life="3000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formLectura" rendered="#{loginBean.roleActivo('admin')}"  >
+
+                        <p:panel   id="lectura" header="#{rxinterfaceBean.rxinterface.accnumber} #{rxinterfaceBean.rxinterface.proyecciones.proc}" style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+
+                            <p:separator/>
+                            <h:panelGrid columns="4" width="500px" style="margin-left: 300px;">
+
+
+                                <p:outputLabel value="Paciente:" style="font-weight: bolder"/>
+                                <p:outputLabel value="#{rxinterfaceBean.rxinterface.paciente.lastnamepatient}, #{rxinterfaceBean.rxinterface.paciente.namepatient}" />
+
+                                <p:outputLabel value=" " />
+                                <p:outputLabel value=" " />
+
+                                <p:outputLabel value="Edad" style="font-weight: bolder"/>
+                                <p:outputLabel value="#{rxinterfaceBean.edad(rxinterfaceBean.rxinterface.paciente.datebirth)}" />
+
+                                <p:outputLabel value=" " />
+                                <p:outputLabel value=" " />
+
+                                <p:outputLabel value="Fecha:" style="font-weight: bolder"/>
+                                <p:outputLabel value="#{rxinterfaceBean.rxinterface.date}">
+                                </p:outputLabel>
+
+                                <p:outputLabel value="  " />
+                                <p:outputLabel value=" " />
+
+                                <p:outputLabel value="Hora:" style="font-weight: bolder"/>
+                                <h:outputText value="#{rxinterfaceBean.rxinterface.timestudy}">
+
+                                </h:outputText>
+
+                                <p:outputLabel value="  " />
+                                <p:outputLabel value=" " />
+                            </h:panelGrid>
+                            <p:separator/>
+                            <h:panelGrid columns="2" width="500px" style="margin-left: 300px;">
+                                <p:outputLabel value="Radiologo: " style="font-weight: bolder"/>
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.usuarios.iduser}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                    <f:selectItems value="#{rxinterfaceBean.listaRadiologos}"/>
+                                </p:selectOneMenu> 
+
+
+                                <h:outputLabel value="Referente: " style="font-weight: bold"  />
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.medicos.idmedico}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                    <f:selectItem itemLabel="--- Seleccione ---" />
+                                    <f:selectItems value="#{rxinterfaceBean.listaReferentes}"/>
+
+                                </p:selectOneMenu> 
+
+                                <h:outputLabel value="Aseguradora: " style="font-weight: bold"  />
+                                <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.aseguradoras.idaseguradora}" filter="true" filterMatchMode="contains"  style="width: 300px;">
+                                    <f:selectItems value="#{rxinterfaceBean.listaAseguradoras}"/>
+                                </p:selectOneMenu> 
+
+                                <h:outputLabel value="Tipo de Pago: " style="font-weight: bold"  />
+                                <p:selectOneButton id="tpagoButton" value="#{rxinterfaceBean.rxinterface.tipopago}" style="margin-left: auto;margin-right: auto;position: relative">
+                                    <f:selectItem itemLabel="Efectivo" itemValue="efectivo" />
+                                        <f:selectItem itemLabel="Cheque" itemValue="cheque" />
+                                        <f:selectItem itemLabel="Tarjeta" itemValue="tarjeta" />
+                                        <f:selectItem itemLabel="Credito" itemValue="credito" />
+                                </p:selectOneButton>
+
+                            </h:panelGrid>
+                            <p:separator/>
+                            <p:commandButton style="margin-left: 300px;" update="growl" value="GUARDAR" actionListener="#{rxinterfaceBean.registrarFinalizado()}"/>
+                            <p:commandButton  value="REGRESAR" ajax="true" action="mFinalizados.xhmtl?faces-redirect=true"/>
+                            <p:outputLabel value="Imprimir: " style="font-weight: bolder;margin-left: 248px"  />
+                            <h:commandLink value="MEMBRETADA"  style="padding: .3em 1em;" actionListener="#{rxinterfaceBean.verReporteMemb()}" target="_blank" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-text ui-c"/>
+                            <p:commandLink value="PDF"  style="padding: .3em 1em;" actionListener="#{rxinterfaceBean.verReporte()}" target="_blank" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-text ui-c" ajax="false" />
+                            <p:separator/>
+
+
+                            <p:textEditor widgetVar="editor" height="300" id="editor" value="#{rxinterfaceBean.rxinterface.report}" style="margin-bottom:10px;width: 650px;margin-left: auto;margin-right: auto" placeholder="Digite reporte">
+                                <f:facet name="toolbar">
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-font"></select>
+                                        <select class="ql-size"></select>
+                                    </span>
+                                </f:facet>
+                            </p:textEditor>
+                        </p:panel>    
+  
+                    </h:form> 
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

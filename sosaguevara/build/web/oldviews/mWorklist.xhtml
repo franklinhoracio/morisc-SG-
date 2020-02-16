@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+                <p:growl id="growl"  showDetail="true" life="3000"  autoUpdate="true"/>
+                <h:form id="formMostrarRxinterface" >
+                    <p:poll interval="1" update="formMostrarRxinterface" />
+                    <p:dataTable var="tablaRxinterfaces" value="#{rxinterfaceBean.worklistDate(datesBean.fechaactual)}"
+                                 id="tablaRxinterfaID"
+                                 widgetVar="rxinterfaceTable"
+                                 emptyMessage="No hay registros disponibles para la busqueda"
+                                 paginator="true" 
+                                 rows="10" 
+                                 paginatorPosition="top"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,20"
+                                 currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                 selectionMode="single" selection="#{rxinterfaceBean.rxinterface}" 
+                                 rowKey="#{tablaRxinterfaces.accnumber}"
+                                 sortBy="#{tablaRxinterfaces.accnumber}" sortOrder="ascending"
+                                 >
+                        <f:facet name="header">
+                            <p:outputPanel class="center_content">
+                                <h:outputText value="Buscar: "  />
+                                <p:inputText id="globalFilter" onkeyup="PF('rxinterfaceTable').filter()" style="width:150px" placeholder="Acc o nombre"/>
+                                <p:outputLabel value="Fecha: "  style="margin-left: 820px;"/>
+                                <p:calendar id="fechaworklist" widgetVar="fechaselect" value="#{datesBean.fechaactual}" navigator="true" pattern="dd-MMM-yyyy">
+
+                                </p:calendar>
+                                <p:commandButton   icon="fa fa-chevron-right"  update=":formMostrarRxinterface" oncomplete="gowklst(xhr, status, args)" />
+                            </p:outputPanel>
+                        </f:facet>
+
+
+
+                        <p:column headerText="Numero de Acceso:"  filterBy="#{tablaRxinterfaces.accnumber}" filterStyle="display:none" filterMatchMode="contains" width="10%">
+                            <h:outputText value="#{tablaRxinterfaces.accnumber}" />
+                        </p:column>
+                        <p:column headerText="Nombre Paciente" filterBy="#{tablaRxinterfaces.namepatient} #{tablaRxinterfaces.lastnamepatient}" filterStyle="display:none" width="30%">
+                            <h:outputText value="#{tablaRxinterfaces.namepatient} #{tablaRxinterfaces.lastnamepatient}" />
+                        </p:column>
+                        <p:column headerText="Estudio:">
+                            <h:outputText value="#{tablaRxinterfaces.procname}" />
+                        </p:column>
+                        <p:column headerText="Fecha" width="10%">
+                            <h:outputText value="#{tablaRxinterfaces.datestudy}" />
+                        </p:column>
+                        <p:column headerText="Estatus" width="10%">
+                            <h:outputText value="#{tablaRxinterfaces.status}" />
+                        </p:column>
+                        <p:column headerText="Acciones"  width="10%"  >
+                            <p:commandButton  icon="ui-icon-pencil"></p:commandButton>
+                            <p:commandButton  icon="ui-icon-clipboard"></p:commandButton>
+                            <p:commandButton  icon="ui-icon-trash" oncomplete="PF('dlgdelete').show()" update=":formcancelar">
+                                <f:setPropertyActionListener target="#{rxinterfaceBean.rxinterface}" value="#{tablaRxinterfaces}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+                <p:dialog id="dlgcancelarcargo" header="Esta seguro que desea cancelar el estudio?" showEffect="explode" hideEffect="explode" widgetVar="dlgdelete" modal="true" resizable="false" minWidth="200">    
+                    <h:form id="formcancelar">
+                        <p:panelGrid columns="3" style="margin-left: auto;margin-right: auto;">   
+                            <h:outputText value="#{rxinterfaceBean.rxinterface.accnumber}"/> 
+                            <h:outputText value="#{rxinterfaceBean.rxinterface.procname}"/> 
+                            <h:outputText value="#{rxinterfaceBean.rxinterface.namepatient} #{rxinterfaceBean.rxinterface.lastnamepatient}" />
+                            <br></br>
+                        </p:panelGrid>
+                        <p:commandButton value="ACEPTAR" actionListener="#{rxinterfaceBean.cancelarCargo()}" oncomplete="gowklst(xhr, status, args)" />
+                        <p:commandButton value="CANCELAR" onclick="PF('dlgdelete').hide()" update=":formMostrarRxinterface"/>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

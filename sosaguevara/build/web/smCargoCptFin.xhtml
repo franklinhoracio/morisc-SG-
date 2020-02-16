@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+
+            <ui:define name="content">
+                <div >
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                    <p:ajaxStatus onstart="on_start()" oncomplete="on_complete()" />
+                    <h:form id="formRegistrarEstudio">
+                        <p:panel id="panel" header="Modificar Estudio: #{rxinterfaceBean.rxinterface.accnumber}" style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                            <p:panel style="margin-bottom:10px;">
+                                <h:outputLabel value="Advertencia!"  style="font-weight: bold;width: 50px;font-size: larger"/>
+                                <h:outputLabel value="Desea Cambiar el Tipo de Estudio #{rxinterfaceBean.rxinterface.accnumber}?!"  style="font-weight: bold;width: 50px;"/>
+
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h:outputLabel   value="Paciente: " style="font-weight: bold" />
+                                    <p:selectOneMenu   style="width: 300px;" disabled="true">
+                                        <f:selectItem itemLabel="#{rxinterfaceBean.rxinterface.paciente.lastnamepatient}, #{rxinterfaceBean.rxinterface.paciente.namepatient}" />
+
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Estudio: " style="font-weight: bold"  />
+                                    <p:selectOneMenu value="#{rxinterfaceBean.rxinterface.proyecciones.cpt}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                        <f:selectItem itemLabel="--- Seleccione ---" />
+                                        <f:selectItems value="#{rxinterfaceBean.listaProyecciones}"/>
+
+                                    </p:selectOneMenu> 
+
+                                    <h:outputLabel value="Estado: " style="font-weight: bold"  />
+                                    <h:outputLabel value="#{rxinterfaceBean.rxinterface.status}" class="status" style="background-color: #{rxinterfaceBean.colorworklist(rxinterfaceBean.rxinterface.status)};" />
+
+
+                                </h:panelGrid>
+                            </p:panel>
+
+                            <h:panelGrid columns="2">
+                                <p:commandButton  value="ACEPTAR" ajax="false" action="mFinalizados.xhmtl?faces-redirect=true"  actionListener="#{rxinterfaceBean.modificarEstudio()}" icon="ui-icon-check"/>
+                                <p:commandButton  value="CANCELAR" ajax="false" action="mFinalizados.xhmtl?faces-redirect=true"  immediate="true"/>
+                            </h:panelGrid>
+
+                        </p:panel> 
+                    </h:form>
+
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

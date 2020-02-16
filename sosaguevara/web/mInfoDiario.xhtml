@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+
+                    <h:form id="formMostrarInformes"  >
+                        <p:growl id="growl" autoUpdate="true" showDetail="true" life="3000" />
+                        <p:panel   id="informes" header="Informe Diario: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+
+                            <p:toolbar style="background-color:  #ffffff; ">
+                                <f:facet name="left">
+                                    <p:outputPanel   >
+                                        <p:outputLabel value="Fecha: " style="margin-left: 0px"/>
+                                        <p:calendar maxdate="#{reporteDiarioBean.today}"  id="fechaworklist" value="#{reporteDiarioBean.workdate}" widgetVar="fechaworklist"  navigator="true" pattern="dd-MM-yyyy">
+                                            <p:ajax event="dateSelect" update="tablaInfoDiario"  listener="#{reporteDiarioBean.actualizarInformeDiario()}"/>
+                                        </p:calendar>
+                                    </p:outputPanel>
+                                </f:facet>
+                            </p:toolbar>
+                            <br/><br/>
+                            <p:dataTable id="tablaInfoDiario" var="tablaInfoDiario" value="#{reporteDiarioBean.rxestudios}"
+                                         widgetVar="infodiarioTable"
+                                         emptyMessage="No hay registros disponibles para la busqueda"
+                                         selectionMode="single" selection="#{reporteDiarioBean.rxinterface}" 
+                                         rowKey="#{tablaInfoDiario.accnumber}"
+                                         sortBy="#{tablaInfoDiario.datestudy}" sortOrder="ascending"
+                                         reflow="true"
+                                         style="margin-left: auto; margin-right: auto; max-width: 900px; background-color:  white"
+                                         >
+
+                                <f:facet name="header"  >
+                                    <p:outputPanel class="center_content" >
+                                        <p:outputLabel value="INFORME DIARIO" style="font-weight: bolder"/>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="Archivo" filterBy="#{tablaInfoDiario.accnumber}" filterStyle="display:none" filterMatchMode="contains" width="10%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.site}.#{tablaInfoDiario.accnumber}.#{tablaInfoDiario.year}" style="font-size:11px;font-weight: normal"/>
+                                </p:column>
+
+                                <p:column headerText="Hora" width="10%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.timestudy}" style="font-size:11px;font-weight: normal">
+
+                                    </h:outputText>     
+                                </p:column>
+
+                                <p:column headerText="Estudio" filterBy="#{tablaInfoDiario.proyecciones.proc}" filterStyle="display:none" filterMatchMode="contains" width="20%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.proyecciones.proc}" style="font-size:11px;font-weight: normal"/>
+                                </p:column>
+
+                                <p:column headerText="Tipo de Documento" width="10%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.tipodoc}" style="font-size:11px;font-weight: normal"></h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Numero de Documento" width="10%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.documento}" /> 
+                                </p:column>
+
+                                <p:column headerText="Forma de Pago"  width="10%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.tipopago}" style="font-size:11px;font-weight: normal"></h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Institucion"  width="17%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.institucion}" />
+                                </p:column>
+
+                                <p:column headerText="Aseguradora"  width="17%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.aseguradoras.aseguradora}" />
+                                </p:column>
+
+                                <p:column headerText="Valor Real"  width="10%" style="font-size:11px;font-weight: bold">
+                                    <h:outputText value="#{tablaInfoDiario.pagado}" />
+                                </p:column>
+
+                                <p:column exportable="false" width="5%" >
+                                    <p:commandButton id="editarRepoBtn" icon="ui-icon-pencil" update="formModificarRegistro" oncomplete="PF('dlgmodificar').show()">
+                                        <f:setPropertyActionListener value="#{tablaInfoDiario}" target="#{reporteDiarioBean.rxinterface}" />
+                                    </p:commandButton>
+                                    <p:tooltip id="tlteditarRepoBtn" for="editarRepoBtn" value="Modificar Registro" />
+
+                                </p:column>
+
+                                <p:columnGroup type="footer">
+                                    <p:row>
+                                        <p:column colspan="8" style="text-align:right" footerText="Total: " />
+                                        <p:column colspan="2" footerText="$#{reporteDiarioBean.totalPrecios()}" />
+                                    </p:row>
+                                </p:columnGroup>
+
+
+                                <f:facet name="footer">
+                                    <h:commandLink id="btnExcel" style="margin-left: 80%">
+                                        <p:graphicImage value="/images/excel.png" width="18"/>
+                                        <p:dataExporter type="xls" target="tablaInfoDiario" fileName="informediario" />
+                                    </h:commandLink>
+
+                                    <h:commandLink id="btnPdf">
+                                        <p:graphicImage value="/images/pdf.png" width="18"/>
+                                        <p:dataExporter type="pdf" target="tablaInfoDiario" fileName="informediario"/>
+                                    </h:commandLink>
+                                </f:facet>
+
+                            </p:dataTable>
+                            <br/>
+                            <br/>
+                        </p:panel>  
+
+                    </h:form> 
+
+
+                    <h:form id="formModificarRegistro">
+                        <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Editar Registro" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" width="600px">    
+                            <p:panelGrid columns="2" columnClasses="label, value"  style="position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                                <p:outputLabel value="Tipo de Documento  "  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{reporteDiarioBean.rxinterface.tipodoc}" >
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItem itemLabel="F" itemValue="F"/>
+                                    <f:selectItem itemLabel="CF" itemValue="CF"/>
+                                    <f:selectItem itemLabel="FE" itemValue="FE"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Numero de Documento  "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{reporteDiarioBean.rxinterface.documento}" styleClass="outputLabel" size="50"/> 
+                                <p:outputLabel value="Forma de Pago  "  style="font-weight: bold;width: 50px;"/>
+
+                                <p:selectOneButton id="tpagoButton" value="#{reporteDiarioBean.rxinterface.tipopago}" style="margin-left: auto;margin-right: auto;position: relative">
+                                    <f:selectItem itemLabel="Efectivo" itemValue="efectivo" />
+                                    <f:selectItem itemLabel="Cheque" itemValue="cheque" />
+                                    <f:selectItem itemLabel="Tarjeta" itemValue="tarjeta" />
+                                    <f:selectItem itemLabel="Credito" itemValue="credito" />
+                                </p:selectOneButton>
+
+
+                                <p:outputLabel value="Institucion  "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputText value="#{reporteDiarioBean.rxinterface.institucion}" styleClass="outputLabel" size="50"/> 
+                                <p:outputLabel value="Aseguradora  "  style="font-weight: bold;width: 50px;"/>
+                                <p:selectOneMenu value="#{reporteDiarioBean.rxinterface.aseguradoras.idaseguradora}" filter="true" filterMatchMode="contains"  style="width: 270px;">
+                                    <f:selectItems value="#{reporteDiarioBean.listaAseguradoras}"/>
+                                </p:selectOneMenu> 
+                                <p:outputLabel value="Valor Real  "  style="font-weight: bold;width: 50px;"/>
+                                <p:inputNumber value="#{reporteDiarioBean.rxinterface.pagado}" styleClass="outputLabel" size="50"/> 
+
+                            </p:panelGrid>
+                            <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarInformes" actionListener="#{reporteDiarioBean.guardarRegistro()}"/>
+                            <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                        </p:dialog>
+                    </h:form>
+
+
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

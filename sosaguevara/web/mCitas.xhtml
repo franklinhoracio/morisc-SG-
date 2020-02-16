@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <div>
+                    <script type="text/javascript">
+                        PrimeFaces.locales['es'] = {
+                            closeText: 'Cerrar',
+                            prevText: 'Anterior',
+                            nextText: 'Siguiente',
+                            currentText: 'Hoy',
+                            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            dayNamesShort: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+                            dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                            weekHeader: 'Semana',
+                            firstDay: 1,
+                            isRTL: false,
+                            showMonthAfterYear: false,
+                            yearSuffix: '',
+                            month: 'Mes',
+                            week: 'Semana',
+                            day: 'Dia',
+                            allDayText: 'Todo el dia'
+                        };
+
+                    </script>
+                    <p:growl id="growl" autoUpdate="true" showDetail="true" life="7000" />
+                    <h:form id="formMostrarInformes"  >
+
+                        <p:panel   id="informes" header="Citas: " style="margin-left: auto; margin-right: auto; width: 1300px; background-color:  white">
+                            <p:schedule  id="schedule" 
+                                         allDaySlot="false" 
+                                         value="#{citasBean.eventModel}" 
+                                         aspectRatio="2"   
+                                         widgetVar="myschedule" 
+                                         locale="es" 
+                                         minTime="07:30:00" 
+                                         maxTime="17:30:00" 
+                                         view="agendaWeek"  
+                                         timeZone="GMT-6" 
+                                         style="width: 1000px;" 
+                                         draggable="false" 
+                                         resizable="false"
+                                         slotMinutes="30"
+                                         >
+                                <p:ajax event="dateSelect" listener="#{citasBean.onDateSelect}" update="eventDetails growl" oncomplete="PF('eventDialog').show();" />
+                                <p:ajax event="eventSelect" listener="#{citasBean.onEventSelect}" update="eventDetails growl" oncomplete="PF('eventDialog').show();" />
+                                <p:ajax event="eventMove" listener="#{citasBean.onEventMove}" update="growl" />
+                                <p:ajax event="eventResize" listener="#{citasBean.onEventResize}" update="growl" />
+                            </p:schedule>
+                            <br/>
+                            <br/>
+                        </p:panel>   
+                        <p:dialog widgetVar="eventDialog" header="Detalles de la Cita" showEffect="clip" hideEffect="clip">
+                            <h:panelGrid id="eventDetails" columns="2">
+                                <p:outputLabel for="title" value="Descripcion: " />
+                                <p:inputText id="title" value="#{citasBean.event.data.descripcion}" required="true" size="50" />
+                                <p:outputLabel value="Nombres(Paciente): " />
+                                <p:inputText id="nombre" value="#{citasBean.event.data.nombre}" required="false" size="50" />
+                                <p:outputLabel value="Apellidos(Paciente): " />
+                                <p:inputText id="apellido" value="#{citasBean.event.data.apellido}" required="false" size="50" />
+
+                                <p:outputLabel value="Telefono: " />
+                                <p:inputMask value="#{citasBean.event.data.telefono}" mask="9999-9999" />
+                                <p:outputLabel for="from" value="Desde: " />
+                                <p:calendar id="from" value="#{citasBean.event.startDate}" pattern="dd/MM/yyyy HH:mm" stepMinute="30"/>
+
+                                <p:outputLabel value="Radiologo: " />
+                                
+                                <p:selectOneMenu value="#{citasBean.event.data.iduser}" filter="true" filterMatchMode="contains" required="true" style="width: 300px;">
+                                    <f:selectItem itemLabel="n/a" itemValue="0" />
+                                    <f:selectItem itemLabel="Marta Eugenia Sosa de Calix" itemValue="6" />
+                                    <f:selectItem itemLabel="Beatriz Maria Guevara Vasquez" itemValue="5" />
+                                    <f:selectItem itemLabel="Fernando Guevara Serrano" itemValue="7" />
+                                    <f:selectItem itemLabel="Nelson Montalvo Urbina" itemValue="8" />
+                                    <f:selectItem itemLabel="Pamela Alfaro" itemValue="15" />
+                                </p:selectOneMenu> 
+
+                                <p:outputLabel value="Confirmado:  " />
+                                <p:selectBooleanCheckbox   value="#{citasBean.event.data.confirmado}" />
+                            </h:panelGrid>
+                            <h:panelGrid id="eventButtons" columns="4">
+                                <p:commandButton id="addButton" value="Guardar" action="#{citasBean.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" update="growl"/>
+
+                                <p:commandButton immediate="true" value="Cancelar" action="#{citasBean.cancelar()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"  update="growl">
+                                    <p:confirm header="Advertencia" message="Esta seguro que desea cancelar la cita?" icon="fa fa-exclamation-triangle" />
+                                </p:commandButton>
+
+                                <p:commandButton immediate="true" value="Arribar" action="#{citasBean.arribar()}" actionListener="#{rxinterfaceBean.inicializarTarget(actionevent)}"/>
+
+                                <p:commandButton value="Cerrar" immediate="true" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"  update="growl"/>
+                            </h:panelGrid>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                            </p:confirmDialog>
+                        </p:dialog>
+                    </h:form> 
+
+
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

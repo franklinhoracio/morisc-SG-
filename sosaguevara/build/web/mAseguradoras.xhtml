@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./t_menu.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="growl" autoUpdate="true" showDetail="true" life="10000" />
+                <h:form id="formMostrarAseguradoras"   >
+
+                    <p:panel   id="medicos" header="Aseguradoras: " style="margin-left:auto;margin-right:auto;max-width: 1290px;background-color:white;min-height:700px;margin-bottom:20px;">
+                        <p:dataTable id="tablaAseguradoras" var="tablaAseguradoras" value="#{aseguradorasBean.aseguradoras}"
+                                     widgetVar="aseguradorasTable"
+                                     emptyMessage="No hay registros disponibles para la busqueda"
+                                     paginator="true" 
+                                     rows="15" 
+                                     reflow="true"
+                                     paginatorPosition="top"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="15,25,50"
+                                     currentPageReportTemplate="Mostrando: ({startRecord} - {endRecord}) de {totalRecords}"
+                                     selectionMode="single" selection="#{aseguradorasBean.aseguradora}" 
+                                     rowKey="#{tablaAseguradoras.idaseguradora}"
+                                     sortBy="#{tablaAseguradoras.idaseguradora}" sortOrder="ascending"
+                                     style="max-width: 800px;margin-left:auto;margin-right:auto;"
+                                     >
+
+                            <f:facet name="header"  >
+                                <p:outputPanel class="left_content"  >
+                                    <h:outputText value="Buscar "  />
+                                    <p:inputText id="globalFilter" onkeyup="PF('aseguradorasTable').filter()"  placeholder="Codigo/Nombre"/>
+                                    <p:commandButton  value="Nueva Aseguradora" style="float: right" icon="fa fa-floppy-o" oncomplete="PF('dlgregistrar').show()"  update=":formRegistrarAseguradora" actionListener="#{aseguradorasBean.inicializarAseguradora(actionevent)}" />
+
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column headerText="Codigo" width="5%" sortBy="idmedico" filterBy="#{tablaAseguradoras.idaseguradora}" filterStyle="display:none" filterMatchMode="contains" >
+                                <h:outputText value="#{tablaAseguradoras.idaseguradora}" style="font-size:11px;font-weight: bold"/>
+                            </p:column>
+                            <p:column headerText="Aseguradora" width="35%" filterBy="#{tablaAseguradoras.aseguradora}" filterStyle="display:none" filterMatchMode="contains">
+                                <h:outputText value="#{tablaAseguradoras.aseguradora}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Telefono" width="20%">
+                                <h:outputText value="#{tablaAseguradoras.telefono}" style="font-size:11px;"/>
+                            </p:column>
+                            <p:column headerText="Direccion" width="20%">
+                                <h:outputText value="#{tablaAseguradoras.direccion}" style="font-size:11px;"/>
+                            </p:column>
+
+
+                            <p:column exportable="false" width="5%" >
+                                <p:commandButton id="editarProBtn" icon="ui-icon-pencil" update="formModificarAseguradora" oncomplete="PF('dlgmodificar').show()">
+                                    <f:setPropertyActionListener value="#{tablaAseguradoras}" target="#{aseguradorasBean.aseguradora}" />
+                                </p:commandButton>
+                                <p:tooltip id="tlteditarProBtn" for="editarProBtn" value="Modificar Registro" />
+
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="btnExcel" style="margin-left: 95%">
+                                    <p:graphicImage value="/images/excel.png" width="18"/>
+                                    <p:dataExporter type="xls" target="tablaAseguradoras" fileName="aseguradoras" />
+                                </h:commandLink>
+                                <p:tooltip id="tltbtnExcel" for="btnExcel" value="Exportar a Hoja de Datos" />
+                            </f:facet>
+
+
+                        </p:dataTable>
+
+                    </p:panel>     
+
+                </h:form>
+
+                <h:form id="formRegistrarAseguradora">
+                    <p:dialog id="dlgregistrar" widgetVar="dlgregistrar" header="Nueva Aseguradora" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" width="600px">    
+                        <p:panelGrid columns="2" columnClasses="label, value"  style="position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                            <p:outputLabel value="Aseguradora:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{aseguradorasBean.aseguradora.aseguradora}" styleClass="outputLabel" size="50" required="true"/> 
+                            <p:outputLabel value="Telefono:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputMask autocomplete="off" mask="9999-9999"  value="#{aseguradorasBean.aseguradora.telefono}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Direccion  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{aseguradorasBean.aseguradora.direccion}" styleClass="outputLabel" size="50"/> 
+                        </p:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgregistrar').hide()"  update="formMostrarAseguradoras growl" actionListener="#{aseguradorasBean.insertarAseguradora()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgregistrar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form> 
+
+
+                <h:form id="formModificarAseguradora">
+                    <p:dialog id="dlgmodificar" widgetVar="dlgmodificar" header="Editar Aseguradora" showEffect="explode" hideEffect="explode"  modal="true" resizable="false" width="600px">    
+                        <p:panelGrid columns="2" columnClasses="label, value"  style="position:relative;margin-left: auto; margin-right: auto;" styleClass="foo">
+
+                            <p:outputLabel value="Aseguradora:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{aseguradorasBean.aseguradora.aseguradora}" styleClass="outputLabel" size="50" required="true"/> 
+                            <p:outputLabel value="Telefono:  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputMask autocomplete="off" mask="9999-9999" value="#{aseguradorasBean.aseguradora.telefono}" styleClass="outputLabel" size="50"/> 
+                            <p:outputLabel value="Direccion  "  style="font-weight: bold;width: 50px;"/>
+                            <p:inputText value="#{aseguradorasBean.aseguradora.direccion}" styleClass="outputLabel" size="50"/> 
+
+                        </p:panelGrid>
+                        <p:commandButton  value="GUARDAR" oncomplete="PF('dlgmodificar').hide()"  update="formMostrarAseguradoras growl" actionListener="#{aseguradorasBean.modificarAseguradora()}"/>
+                        <p:commandButton  value="CANCELAR" onclick="PF('dlgmodificar').hide()" immediate="true"/>   
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
